@@ -1,18 +1,22 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { PASSWORD_REG_EXP } from 'src/app/common/constants';
+import { ValidationService } from './validation.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FormsService {
-  constructor(private fb: FormBuilder) {}
-  private PASSWORD_REG_EXP = /((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
+  constructor(
+    private fb: FormBuilder,
+    private validationService: ValidationService,
+  ) {}
 
   loginForm = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: [
+    email: [
       '',
-      [Validators.required, Validators.pattern(this.PASSWORD_REG_EXP)],
+      [this.validationService.required, this.validationService.email],
     ],
+    password: ['', this.validationService.required],
   });
 }
