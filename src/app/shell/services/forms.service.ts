@@ -1,22 +1,17 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { PASSWORD_REG_EXP } from 'src/app/common/constants';
-import { ValidationService } from './validation.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { LoginFormFields } from '../../interfaces';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FormsService {
-  constructor(
-    private fb: FormBuilder,
-    private validationService: ValidationService,
-  ) {}
+  constructor(private fb: FormBuilder) {}
 
-  loginForm = this.fb.group({
-    email: [
-      '',
-      [this.validationService.required, this.validationService.email],
-    ],
-    password: ['', this.validationService.required],
-  });
+  getLoginForm(): FormGroup {
+    return this.fb.group({
+      [LoginFormFields.EMAIL]: ['', [Validators.required, Validators.email]],
+      [LoginFormFields.PASSWORD]: ['', Validators.required],
+    });
+  }
 }

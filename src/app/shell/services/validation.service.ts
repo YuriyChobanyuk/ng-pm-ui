@@ -1,13 +1,7 @@
 import { Injectable } from '@angular/core';
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ValidationErrors,
-  Validators,
-} from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
 import { INVALID, INVALID_EMAIL, REQUIRED } from '../../common/constants';
-import { ValidationStatus } from '../../interfaces';
+import { FieldStatus } from '../../interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -15,30 +9,44 @@ import { ValidationStatus } from '../../interfaces';
 export class ValidationService {
   constructor() {}
 
-  email(formControl: FormControl): ValidationErrors | null {
-    return Validators.email(formControl)
-      ? {
-          email: INVALID_EMAIL,
-        }
-      : null;
+  private getFormControl(form: FormGroup, field: string): AbstractControl {
+    return form.controls[field];
   }
 
-  required(formControl: FormControl): ValidationErrors | null {
-    return Validators.required(formControl)
-      ? {
-          required: REQUIRED,
-        }
-      : null;
-  }
-
-  getValidationMessage(errors: ValidationErrors | null): string {
+  private getValidationMessage({ errors }: AbstractControl): string {
     if (!errors) {
       return '';
+    }
+    if (errors.email) {
+      return INVALID_EMAIL;
+    }
+    if (errors.required) {
+      return REQUIRED;
     }
     return Object.values(errors)[0];
   }
 
-  getFieldInvalid(formControl: AbstractControl): boolean {
+  private getFieldInvalid(formControl: AbstractControl): boolean {
     return formControl.touched && formControl.status === INVALID;
+  }
+
+  isInvalid(form: FormGroup, field: string): boolean {
+    return this.getFieldInvalid(this.getFormControl(form, field));
+  }
+
+  getErrorMessage(form: FormGroup, field: string): string {
+    return this.getValidationMessage(this.getFormControl(form, field));
+  }
+
+  setTouched(form: FormGroup, field: string): void {
+    this.getFormControl(form, field).markAllAsTouched();
+  }
+
+  getFieldStatus(form: FormGroup, field: string): FieldStatus {
+    return {
+      isInvalid: this.isInvalid(form, field),
+      errors: this.getErrorMessage(form, field),
+      setTouched: () => this.setTouched(form, field),
+    };
   }
 }

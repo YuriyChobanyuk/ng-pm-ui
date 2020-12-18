@@ -1,0 +1,37 @@
+<form class="auth-form" [formGroup]="loginForm">
+  <h1 class="h3 mb-4 font-weight-normal">Login</h1>
+  <div class="form-floating mb-4 w-100">
+    <input
+      type="email"
+      class="form-control"
+      id="auth-login-email"
+      [formControlName]="fields.EMAIL"
+      placeholder="name@example.com"
+      [class.is-invalid]="emailStatus.isInvalid"
+      (blur)="emailStatus.setTouched()"
+    />
+    <label for="auth-login-email">Email</label>
+    <div *ngIf="emailStatus.isInvalid" class="invalid-tooltip">
+      {{ emailStatus.errors }}
+    </div>
+  </div>
+  <div class="form-floating mb-4 w-100 has-validation">
+    <input
+      type="password"
+      class="form-control"
+      id="floatingPassword"
+      [formControlName]="fields.PASSWORD"
+      placeholder="Password"
+      [class.is-invalid]="passwordStatus.isInvalid"
+      (blur)="passwordStatus.setTouched()"
+    />
+    <label for="floatingPassword">Password</label>
+    <div class="invalid-tooltip" *ngIf="fields.PASSWORD">
+      {{ passwordStatus.errors }}
+    </div>
+  </div>
+  <button class="btn btn-lg btn-primary btn-block w-100" type="submit">
+    Login
+  </button>
+  <p class="mt-5 mb-3 text-muted">© Personal Manager 2020</p>
+</form>
