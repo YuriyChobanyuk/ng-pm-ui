@@ -1,10 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { FormsService } from '../../services/forms.service';
 import { FormGroup } from '@angular/forms';
 import { ValidationService } from '../../services/validation.service';
-import { ValidationStatus } from 'src/app/interfaces';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-auth',
@@ -19,41 +21,32 @@ export class AuthComponent implements OnInit, OnDestroy {
   destroy$ = new Subject();
 
   loginForm!: FormGroup;
-  validationStatus!: ValidationStatus;
   fields = {
     EMAIL: 'email',
     PASSWORD: 'password',
   };
 
-  get emailInvalid(): boolean {
-    return !!this.validationStatus.get(this.fields.EMAIL)?.invalid;
+  getIsInvalid(fieldName: string): boolean {
+    return this.validationService.getFieldInvalid(
+      this.loginForm.controls[fieldName],
+    );
   }
 
-  get emailErrors(): string {
-    return this.validationStatus.get(this.fields.EMAIL)?.error || '';
-  }
-
-  get passwordInvalid(): boolean {
-    return !!this.validationStatus.get(this.fields.PASSWORD)?.invalid;
-  }
-
-  get passwordErrors(): string {
-    return this.validationStatus.get(this.fields.PASSWORD)?.error || '';
+  getErrorMessage(fieldName: string): string {
+    return this.validationService.getValidationMessage(
+      this.loginForm.controls[fieldName]?.errors,
+    );
   }
 
   ngOnInit(): void {
     this.loginForm = this.formsService.loginForm;
-
-    this.loginForm.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.validationStatus = this.validationService.getValidationStatus(
-          this.loginForm,
-        );
-      });
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
+  }
+
+  handleBlur(fieldName: string): void {
+    this.loginForm.controls[fieldName].markAsTouched();
   }
 }

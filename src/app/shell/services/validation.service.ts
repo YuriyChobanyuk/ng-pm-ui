@@ -41,16 +41,4 @@ export class ValidationService {
   getFieldInvalid(formControl: AbstractControl): boolean {
     return formControl.touched && formControl.status === INVALID;
   }
-
-  getValidationStatus(formGroup: FormGroup): ValidationStatus {
-    return Object.keys(formGroup.controls).reduce((acc, controlKey) => {
-      acc.set(controlKey, {
-        invalid: this.getFieldInvalid(formGroup.controls[controlKey]),
-        error: this.getValidationMessage(
-          formGroup.controls[controlKey]?.errors,
-        ),
-      });
-      return acc;
-    }, new Map());
-  }
 }

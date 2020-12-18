@@ -1,14 +1,15 @@
 <div class="auth-page">
-  <form class="auth-form mt-5" [formGroup]="loginForm">
+  <form class="auth-form" [formGroup]="loginForm">
     <h1 class="h3 mb-4 font-weight-normal">Login</h1>
     <div class="form-floating mb-4 w-100">
       <input
         type="email"
         class="form-control"
         id="auth-login-email"
-        [formControlName]="this.fields.EMAIL"
+        [formControlName]="fields.EMAIL"
         placeholder="name@example.com"
         [class.is-invalid]="emailInvalid"
+        (blur)="handleBlur(fields.EMAIL)"
       />
       <label for="auth-login-email">Email</label>
       <div *ngIf="emailInvalid" class="invalid-tooltip">
@@ -20,9 +21,10 @@
         type="password"
         class="form-control"
         id="floatingPassword"
-        [formControlName]="this.fields.PASSWORD"
+        [formControlName]="fields.PASSWORD"
         placeholder="Password"
         [class.is-invalid]="passwordInvalid"
+        (blur)="handleBlur(fields.PASSWORD)"
       />
       <label for="floatingPassword">Password</label>
       <div class="invalid-tooltip" *ngIf="passwordInvalid">

@@ -1,5 +1,8 @@
+@import 'src/styles/variables';
+
 .auth-page {
-  height: 100%;
+  height: $page-height;
+  position: relative;
 }
 
 .auth-form {
@@ -10,4 +13,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
 }
