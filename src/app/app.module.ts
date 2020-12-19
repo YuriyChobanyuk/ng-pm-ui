@@ -17,8 +17,9 @@ import { ShellHeaderComponent } from './shell/components/shell-header/shell-head
 import { AuthControlComponent } from './shell/components/auth-control/auth-control.component';
 import { AuthState } from './shell/store/auth/state';
 import { InterceptorService } from './shell/services/interceptor.service';
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './shell/components/forms/login/login.component';
+import { SignUpComponent } from './shell/components/forms/sign-up/sign-up.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { LoginComponent } from './shell/components/forms/login/login.component';
     ShellHeaderComponent,
     AuthControlComponent,
     LoginComponent,
+    SignUpComponent,
   ],
   imports: [
     BrowserModule,

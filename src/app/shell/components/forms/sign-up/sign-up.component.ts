@@ -4,33 +4,28 @@ import { ValidationService } from '../../../services/validation.service';
 import { FormGroup } from '@angular/forms';
 import {
   FieldStatus,
-  LoginCredentials,
   LoginFormFields,
+  SignUpFormFields,
 } from '../../../../interfaces';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  selector: 'app-sign-up',
+  templateUrl: './sign-up.component.html',
+  styleUrls: ['./sign-up.component.scss'],
 })
-export class LoginComponent implements OnInit {
+export class SignUpComponent implements OnInit {
   constructor(
     private formsService: FormsService,
     private validationService: ValidationService,
   ) {}
 
   @Output() toggleLogin: EventEmitter<void> = new EventEmitter<void>();
-  @Output()
-  submitLogin: EventEmitter<LoginCredentials> = new EventEmitter<LoginCredentials>();
 
   form!: FormGroup;
-  fields = LoginFormFields;
+  fields = SignUpFormFields;
 
   get emailStatus(): FieldStatus {
-    return this.validationService.getFieldStatus(
-      this.form,
-      this.fields.EMAIL,
-    );
+    return this.validationService.getFieldStatus(this.form, this.fields.EMAIL);
   }
 
   get passwordStatus(): FieldStatus {
@@ -40,18 +35,15 @@ export class LoginComponent implements OnInit {
     );
   }
 
+  get nameStatus(): FieldStatus {
+    return this.validationService.getFieldStatus(this.form, this.fields.NAME);
+  }
+
   ngOnInit(): void {
-    this.form = this.formsService.getLoginForm();
+    this.form = this.formsService.getSignUpForm();
   }
 
   handleToggleLogin(): void {
     this.toggleLogin.emit();
-  }
-
-  submit(): void {
-    this.form.markAllAsTouched();
-    if (this.form.valid) {
-      this.submitLogin.emit(this.form.value);
-    }
   }
 }

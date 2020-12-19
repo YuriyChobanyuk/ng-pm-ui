@@ -1,3 +1,8 @@
 <div class="auth-page">
-  <app-login *ngIf="isLogin"></app-login>
+  <app-login
+    *ngIf="isLogin"
+    (toggleLogin)="toggleIsLogin()"
+    (submitLogin)="handleLoginSubmit($event)"
+  ></app-login>
+  <app-sign-up *ngIf="!isLogin" (toggleLogin)="toggleIsLogin()"></app-sign-up>
 </div>

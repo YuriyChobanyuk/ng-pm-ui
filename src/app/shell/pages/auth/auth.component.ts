@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LoginCredentials } from '../../../interfaces';
 
 @Component({
   selector: 'app-auth',
@@ -12,6 +13,10 @@ export class AuthComponent implements OnInit {
 
   toggleIsLogin(): void {
     this.isLogin = !this.isLogin;
+  }
+
+  handleLoginSubmit(credentials: LoginCredentials): void {
+    console.log({ credentials });
   }
 
   ngOnInit(): void {}

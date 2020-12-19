@@ -23,6 +23,12 @@ export class ValidationService {
     if (errors.required) {
       return REQUIRED;
     }
+    if (errors.minlength) {
+      return `Minimal length is ${errors.minlength.requiredLength}`;
+    }
+    if (errors.maxlength) {
+      return `Maximal length is ${errors.maxlength.requiredLength}`;
+    }
     return Object.values(errors)[0];
   }
 
