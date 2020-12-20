@@ -26,11 +26,15 @@ export class ApiService {
 
   login(payload: LoginCredentials): Observable<AuthResponse> {
     const LOGIN_URL = this.getUrl(this.LOGIN_PATH);
-    return this._httpClient.post<AuthResponse>(LOGIN_URL, payload);
+    return this._httpClient.post<AuthResponse>(LOGIN_URL, payload, {
+      withCredentials: true,
+    });
   }
 
   refresh(): Observable<AuthResponse> {
     const REFRESH_URL = this.getUrl(this.REFRESH_PATH);
-    return this._httpClient.get<AuthResponse>(REFRESH_URL);
+    return this._httpClient.get<AuthResponse>(REFRESH_URL, {
+      withCredentials: true,
+    });
   }
 }

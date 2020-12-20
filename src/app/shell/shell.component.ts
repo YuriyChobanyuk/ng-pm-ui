@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {Store} from "@ngxs/store";
-import {AuthActions} from "./store/auth/actions";
+import { Store } from '@ngrx/store';
+import { authActions } from './store/auth';
 
 @Component({
   selector: 'app-shell',
@@ -22,8 +22,6 @@ export class ShellComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.store.dispatch(new AuthActions.GetUser());
+    this.store.dispatch(authActions.getCurrentUser());
   }
-
-
 }

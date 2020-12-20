@@ -1,19 +1,25 @@
-import { LoginCredentials } from '../../../interfaces';
+import { createAction, props } from '@ngrx/store';
+import { IUser, LoginCredentials } from '../../../interfaces';
 
-export namespace AuthActions {
-  const PREFIX = '[AUTH]';
+export const login = createAction(
+  '[Auth] Login',
+  props<{ credentials: LoginCredentials }>(),
+);
 
-  export class GetUser {
-    static readonly type = `${PREFIX} Get User`;
-  }
+export const loginSuccess = createAction(
+  '[Auth] Login Success',
+  props<{ user: IUser }>(),
+);
 
-  export class Login {
-    static readonly type = `${PREFIX} Login`;
+export const loginError = createAction('[Auth] Login Error');
 
-    constructor(public payload: LoginCredentials) {}
-  }
+export const getCurrentUser = createAction('[Auth] Get Current User');
 
-  export class Refresh {
-    static readonly type = `${PREFIX} Refresh`;
-  }
-}
+export const getCurrentUserSuccess = createAction(
+  '[Auth] Get Current User Success',
+  props<{ user: IUser }>(),
+);
+
+export const getCurrentUserError = createAction(
+  '[Auth] Get Current User Error',
+);

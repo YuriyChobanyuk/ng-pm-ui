@@ -3,6 +3,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 
 const helper = new JwtHelperService();
 import { AccessTokenPayload } from 'src/app/interfaces';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -10,11 +11,16 @@ import { AccessTokenPayload } from 'src/app/interfaces';
 export class LocalStorageService {
   constructor() {}
 
-  getAccessToken(): string | null {
-    return localStorage.getItem('accessToken');
+  refreshToken$: BehaviorSubject<string> = new BehaviorSubject<string>(
+    this.getAccessToken(),
+  );
+
+  getAccessToken(): string {
+    return localStorage.getItem('accessToken') || '';
   }
 
   setAccessToken(token: string): void {
+    this.refreshToken$.next(token);
     localStorage.setItem('accessToken', token);
   }
 

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginCredentials } from '../../../interfaces';
+import { Store } from '@ngrx/store';
+import { authActions } from '../../store/auth';
 
 @Component({
   selector: 'app-auth',
@@ -7,7 +9,7 @@ import { LoginCredentials } from '../../../interfaces';
   styleUrls: ['./auth.component.scss'],
 })
 export class AuthComponent implements OnInit {
-  constructor() {}
+  constructor(private store: Store) {}
 
   isLogin = true;
 
@@ -16,6 +18,7 @@ export class AuthComponent implements OnInit {
   }
 
   handleLoginSubmit(credentials: LoginCredentials): void {
+    this.store.dispatch(authActions.login({ credentials }));
     console.log({ credentials });
   }
 
