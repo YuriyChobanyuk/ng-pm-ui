@@ -1,40 +1,27 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { AuthResponse, IUser, LoginCredentials } from '../../interfaces';
-import { environment } from '../../../environments/environment';
+import {
+  endpoints
+} from '../../shared/constants';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-  constructor(private readonly _httpClient: HttpClient) {}
+  constructor() {}
 
-  private readonly API_URL = environment.apiUrl;
-  private readonly CURRENT_USER_PATH = '/users/current';
-  private readonly LOGIN_PATH = '/auth/login';
-  private readonly REFRESH_PATH = '/auth/refresh';
+  private getUrl = (path: string): string => {
+    return `${endpoints.API_URL}${path}`;
+  };
 
-  private getUrl(path: string): string {
-    return `${this.API_URL}${path}`;
+  get loginEndpoint(): string {
+    return this.getUrl(endpoints.LOGIN);
   }
 
-  getCurrentUser(): Observable<IUser> {
-    const CURRENT_USER_URL = this.getUrl(this.CURRENT_USER_PATH);
-    return this._httpClient.get<IUser>(CURRENT_USER_URL);
+  get currentUserEndpoint(): string {
+    return this.getUrl(endpoints.CURRENT_USER);
   }
 
-  login(payload: LoginCredentials): Observable<AuthResponse> {
-    const LOGIN_URL = this.getUrl(this.LOGIN_PATH);
-    return this._httpClient.post<AuthResponse>(LOGIN_URL, payload, {
-      withCredentials: true,
-    });
-  }
-
-  refresh(): Observable<AuthResponse> {
-    const REFRESH_URL = this.getUrl(this.REFRESH_PATH);
-    return this._httpClient.get<AuthResponse>(REFRESH_URL, {
-      withCredentials: true,
-    });
+  get refreshEndpoint(): string {
+    return this.getUrl(endpoints.REFRESH);
   }
 }

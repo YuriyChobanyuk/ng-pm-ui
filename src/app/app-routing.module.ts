@@ -3,22 +3,23 @@ import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './shell/pages/home/home.component';
 import { AboutComponent } from './shell/pages/about/about.component';
 import { AuthComponent } from './shell/pages/auth/auth.component';
+import { locations } from './shared/constants';
 
 const routes: Routes = [
   {
-    path: '',
+    path: locations.HOME,
     component: HomeComponent,
   },
   {
-    path: 'about',
+    path: locations.ABOUT,
     component: AboutComponent,
   },
   {
-    path: 'auth',
+    path: locations.AUTH,
     component: AuthComponent,
   },
   {
-    path: 'admin',
+    path: locations.ADMIN,
     loadChildren: './admin/admin.module#AdminModule',
   },
 ];

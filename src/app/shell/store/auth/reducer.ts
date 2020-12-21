@@ -7,6 +7,7 @@ import {
   login,
   loginError,
   loginSuccess,
+  logout,
 } from './actions';
 
 export interface AuthState {
@@ -54,6 +55,12 @@ export const authReducer = createReducer(
     ...state,
     user: null,
     error: true,
+    loading: false,
+  })),
+  on(logout, (state) => ({
+    ...state,
+    user: null,
+    error: false,
     loading: false,
   })),
 );

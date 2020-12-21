@@ -23,3 +23,5 @@ export const getCurrentUserSuccess = createAction(
 export const getCurrentUserError = createAction(
   '[Auth] Get Current User Error',
 );
+
+export const logout = createAction('[Auth] Logout');

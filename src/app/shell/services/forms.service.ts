@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import {
   FormBuilder,
-  FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
 import { LoginFormFields, SignUpFormFields } from '../../interfaces';
-import { PASSWORD_REG_EXP } from '../../common/constants';
+import { validation } from '../../shared/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -26,7 +25,7 @@ export class FormsService {
       [SignUpFormFields.EMAIL]: ['', [Validators.required, Validators.email]],
       [SignUpFormFields.PASSWORD]: [
         '',
-        [Validators.required, Validators.pattern(PASSWORD_REG_EXP)],
+        [Validators.required, Validators.pattern(validation.PASSWORD_REG_EXP)],
       ],
       [SignUpFormFields.NAME]: [
         '',

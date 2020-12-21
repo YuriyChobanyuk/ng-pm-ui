@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
-import { INVALID, INVALID_EMAIL, REQUIRED } from '../../common/constants';
+import { validation } from '../../shared/constants';
 import { FieldStatus } from '../../interfaces';
 
 @Injectable({
@@ -18,10 +18,10 @@ export class ValidationService {
       return '';
     }
     if (errors.email) {
-      return INVALID_EMAIL;
+      return validation.INVALID_EMAIL;
     }
     if (errors.required) {
-      return REQUIRED;
+      return validation.REQUIRED;
     }
     if (errors.minlength) {
       return `Minimal length is ${errors.minlength.requiredLength}`;
@@ -33,7 +33,7 @@ export class ValidationService {
   }
 
   private getFieldInvalid(formControl: AbstractControl): boolean {
-    return formControl.touched && formControl.status === INVALID;
+    return formControl.touched && formControl.status === validation.INVALID;
   }
 
   isInvalid(form: FormGroup, field: string): boolean {
