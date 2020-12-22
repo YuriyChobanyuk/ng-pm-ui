@@ -1,5 +1,9 @@
 import { createAction, props } from '@ngrx/store';
-import { IUser, LoginCredentials } from '../../../interfaces';
+import {
+  IUser,
+  LoginCredentials,
+  SignUpCredentials,
+} from '../../../interfaces';
 
 export const login = createAction(
   '[Auth] Login',
@@ -25,3 +29,15 @@ export const getCurrentUserError = createAction(
 );
 
 export const logout = createAction('[Auth] Logout');
+
+export const signUp = createAction(
+  '[Auth] Sign Up',
+  props<{ credentials: SignUpCredentials }>(),
+);
+
+export const signUpSuccess = createAction(
+  '[Auth] Sign Up Success',
+  props<{ user: IUser }>(),
+);
+
+export const signUpError = createAction('[Auth] Sign Up Error');

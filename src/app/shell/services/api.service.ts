@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  endpoints
-} from '../../shared/constants';
+import { endpoints } from '../../shared/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -23,5 +21,9 @@ export class ApiService {
 
   get refreshEndpoint(): string {
     return this.getUrl(endpoints.REFRESH);
+  }
+
+  get signUpEndpoint(): string {
+    return this.getUrl(endpoints.SIGN_UP);
   }
 }

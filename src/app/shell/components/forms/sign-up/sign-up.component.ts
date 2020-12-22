@@ -5,8 +5,10 @@ import { FormGroup } from '@angular/forms';
 import {
   FieldStatus,
   LoginFormFields,
+  SignUpCredentials,
   SignUpFormFields,
 } from '../../../../interfaces';
+import { Event } from '@angular/router';
 
 @Component({
   selector: 'app-sign-up',
@@ -20,6 +22,8 @@ export class SignUpComponent implements OnInit {
   ) {}
 
   @Output() toggleLogin: EventEmitter<void> = new EventEmitter<void>();
+  @Output()
+  submitSignUp: EventEmitter<SignUpCredentials> = new EventEmitter<SignUpCredentials>();
 
   form!: FormGroup;
   fields = SignUpFormFields;
@@ -45,5 +49,12 @@ export class SignUpComponent implements OnInit {
 
   handleToggleLogin(): void {
     this.toggleLogin.emit();
+  }
+
+  submit(): void {
+    this.form.markAllAsTouched();
+    if (this.form.valid) {
+      this.submitSignUp.emit(this.form.value);
+    }
   }
 }

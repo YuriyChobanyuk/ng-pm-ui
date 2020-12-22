@@ -9,14 +9,12 @@ import { FieldStatus } from '../../interfaces';
 export class ValidationService {
   constructor() {}
 
-  private getFormControl(form: FormGroup, field: string): AbstractControl {
-    return form.controls[field];
-  }
-
-  private getValidationMessage({ errors }: AbstractControl): string {
-    if (!errors) {
+  private getValidationMessage(control: AbstractControl | null): string {
+    if (!control || !control.errors) {
       return '';
     }
+    const { errors } = control;
+
     if (errors.email) {
       return validation.INVALID_EMAIL;
     }
@@ -32,27 +30,22 @@ export class ValidationService {
     return Object.values(errors)[0];
   }
 
-  private getFieldInvalid(formControl: AbstractControl): boolean {
-    return formControl.touched && formControl.status === validation.INVALID;
+  private getFieldInvalid(control: AbstractControl | null): boolean {
+    return control ? control.touched && !control.valid : false;
   }
 
   isInvalid(form: FormGroup, field: string): boolean {
-    return this.getFieldInvalid(this.getFormControl(form, field));
+    return this.getFieldInvalid(form.get(field));
   }
 
   getErrorMessage(form: FormGroup, field: string): string {
-    return this.getValidationMessage(this.getFormControl(form, field));
-  }
-
-  setTouched(form: FormGroup, field: string): void {
-    this.getFormControl(form, field).markAllAsTouched();
+    return this.getValidationMessage(form.get(field));
   }
 
   getFieldStatus(form: FormGroup, field: string): FieldStatus {
     return {
       isInvalid: this.isInvalid(form, field),
       errors: this.getErrorMessage(form, field),
-      setTouched: () => this.setTouched(form, field),
     };
   }
 }

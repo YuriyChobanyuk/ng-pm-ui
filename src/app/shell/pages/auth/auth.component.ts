@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LoginCredentials } from '../../../interfaces';
+import { LoginCredentials, SignUpCredentials } from '../../../interfaces';
 import { Store } from '@ngrx/store';
 import { authActions } from '../../store/auth';
 
@@ -19,7 +19,10 @@ export class AuthComponent implements OnInit {
 
   handleLoginSubmit(credentials: LoginCredentials): void {
     this.store.dispatch(authActions.login({ credentials }));
-    console.log({ credentials });
+  }
+
+  handleSignUpSubmit(credentials: SignUpCredentials): void {
+    this.store.dispatch(authActions.signUp({ credentials }));
   }
 
   ngOnInit(): void {}

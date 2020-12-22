@@ -8,6 +8,9 @@ import {
   loginError,
   loginSuccess,
   logout,
+  signUp,
+  signUpError,
+  signUpSuccess,
 } from './actions';
 
 export interface AuthState {
@@ -24,38 +27,21 @@ const initialState: AuthState = {
 
 export const authReducer = createReducer(
   initialState,
-  on(login, (state) => ({
+  on(login, signUp, getCurrentUser, (state) => ({
     ...state,
     loading: true,
     error: false,
   })),
-  on(loginSuccess, (state, { user }) => ({
+  on(loginSuccess, signUpSuccess, getCurrentUserSuccess, (state, { user }) => ({
     ...state,
     user,
     loading: false,
     error: false,
   })),
-  on(loginError, (state) => ({
+  on(loginError, signUpError, getCurrentUserError, (state) => ({
     ...state,
     loading: false,
     error: true,
-  })),
-  on(getCurrentUser, (state) => ({
-    ...state,
-    loading: true,
-    error: false,
-  })),
-  on(getCurrentUserSuccess, (state, { user }) => ({
-    ...state,
-    user,
-    loading: false,
-    error: false,
-  })),
-  on(getCurrentUserError, (state) => ({
-    ...state,
-    user: null,
-    error: true,
-    loading: false,
   })),
   on(logout, (state) => ({
     ...state,

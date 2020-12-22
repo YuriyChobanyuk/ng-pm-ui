@@ -1,4 +1,4 @@
-<form class="auth-form" [formGroup]="form">
+<form class="auth-form" [formGroup]="form" (submit)="submit()">
   <h1 class="h3 mb-4 font-weight-normal">Sign Up</h1>
   <div class="form-floating mb-4 w-100">
     <input
@@ -8,7 +8,6 @@
       [formControlName]="fields.NAME"
       placeholder="Enter your name"
       [class.is-invalid]="nameStatus.isInvalid"
-      (blur)="nameStatus.setTouched()"
     />
     <label for="auth-sign-up-name">Name</label>
     <div *ngIf="nameStatus.isInvalid" class="invalid-tooltip">
@@ -23,7 +22,6 @@
       [formControlName]="fields.EMAIL"
       placeholder="name@example.com"
       [class.is-invalid]="emailStatus.isInvalid"
-      (blur)="emailStatus.setTouched()"
     />
     <label for="auth-sign-up-email">Email</label>
     <div *ngIf="emailStatus.isInvalid" class="invalid-tooltip">
@@ -38,7 +36,6 @@
       [formControlName]="fields.PASSWORD"
       placeholder="Password"
       [class.is-invalid]="passwordStatus.isInvalid"
-      (blur)="passwordStatus.setTouched()"
     />
     <label for="auth-sign-up-password">Password</label>
     <div class="invalid-tooltip" *ngIf="fields.PASSWORD">

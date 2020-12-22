@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthResponse, IUser, LoginCredentials } from '../../interfaces';
+import {
+  AuthResponse,
+  IUser,
+  LoginCredentials,
+  SignUpCredentials,
+} from '../../interfaces';
 import { ApiService } from './api.service';
 import { LocalStorageService } from './local-storage.service';
 import { Router } from '@angular/router';
@@ -33,6 +38,12 @@ export class AuthService {
 
   refreshRequest(): Observable<AuthResponse> {
     return this.client.get<AuthResponse>(this.api.refreshEndpoint, {
+      withCredentials: true,
+    });
+  }
+
+  signUpRequest(payload: SignUpCredentials): Observable<AuthResponse> {
+    return this.client.post<AuthResponse>(this.api.signUpEndpoint, payload, {
       withCredentials: true,
     });
   }

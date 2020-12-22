@@ -8,9 +8,12 @@ import {
   loginError,
   loginSuccess,
   logout,
+  signUp,
+  signUpError,
+  signUpSuccess,
 } from './actions';
 import { catchError, map, mergeMap, takeUntil } from 'rxjs/operators';
-import { LoginCredentials } from '../../../interfaces';
+import { LoginCredentials, SignUpCredentials } from '../../../interfaces';
 import { of } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 
@@ -29,6 +32,22 @@ export class AuthEffects {
             return loginSuccess({ user });
           }),
           catchError(() => of(loginError())),
+        ),
+      ),
+    ),
+  );
+
+  signUp$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(signUp.type),
+      mergeMap(({ credentials }: { credentials: SignUpCredentials }) =>
+        this.authService.signUpRequest(credentials).pipe(
+          takeUntil(this.actions$.pipe(ofType(logout.type))),
+          map(({ token, data: { user } }) => {
+            this.authService.accessToken = token;
+            return signUpSuccess({ user });
+          }),
+          catchError(() => of(signUpError())),
         ),
       ),
     ),

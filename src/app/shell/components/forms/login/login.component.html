@@ -8,7 +8,6 @@
       [formControlName]="fields.EMAIL"
       placeholder="name@example.com"
       [class.is-invalid]="emailStatus.isInvalid"
-      (blur)="emailStatus.setTouched()"
     />
     <label for="auth-login-email">Email</label>
     <div *ngIf="emailStatus.isInvalid" class="invalid-tooltip">
@@ -23,7 +22,6 @@
       [formControlName]="fields.PASSWORD"
       placeholder="Password"
       [class.is-invalid]="passwordStatus.isInvalid"
-      (blur)="passwordStatus.setTouched()"
     />
     <label for="floatingPassword">Password</label>
     <div class="invalid-tooltip" *ngIf="fields.PASSWORD">
