@@ -1,9 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsService } from '../../../services/forms.service';
 import { ValidationService } from '../../../services/validation.service';
-import { FormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
 import {
-  FieldStatus,
   LoginCredentials,
   LoginFormFields,
 } from '../../../../interfaces';
@@ -26,18 +25,40 @@ export class LoginComponent implements OnInit {
   form!: FormGroup;
   fields = LoginFormFields;
 
-  get emailStatus(): FieldStatus {
-    return this.validationService.getFieldStatus(
-      this.form,
-      this.fields.EMAIL,
-    );
+  get email(): AbstractControl | null {
+    return this.form.get(this.fields.EMAIL);
   }
 
-  get passwordStatus(): FieldStatus {
-    return this.validationService.getFieldStatus(
-      this.form,
-      this.fields.PASSWORD,
-    );
+  get emailInvalid(): boolean {
+    return this.validationService.getFieldInvalid(this.email);
+  }
+
+  get emailErrors(): string | null {
+    switch (true) {
+      case this.email?.errors?.required:
+        return 'Email is required';
+      case this.email?.errors?.email:
+        return 'Should be a valid email';
+      default:
+        return null;
+    }
+  }
+
+  get password(): AbstractControl | null {
+    return this.form.get(this.fields.PASSWORD);
+  }
+
+  get passwordInvalid(): boolean {
+    return this.validationService.getFieldInvalid(this.password);
+  }
+
+  get passwordErrors(): string | null {
+    switch (true) {
+      case this.password?.errors?.required:
+        return 'Password is required';
+      default:
+        return null;
+    }
   }
 
   ngOnInit(): void {

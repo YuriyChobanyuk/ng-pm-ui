@@ -7,11 +7,11 @@
       id="auth-sign-up-name"
       [formControlName]="fields.NAME"
       placeholder="Enter your name"
-      [class.is-invalid]="nameStatus.isInvalid"
+      [class.is-invalid]="nameInvalid"
     />
     <label for="auth-sign-up-name">Name</label>
-    <div *ngIf="nameStatus.isInvalid" class="invalid-tooltip">
-      {{ nameStatus.errors }}
+    <div class="invalid-tooltip">
+      {{ nameErrors }}
     </div>
   </div>
   <div class="form-floating mb-4 w-100">
@@ -21,11 +21,11 @@
       id="auth-sign-up-email"
       [formControlName]="fields.EMAIL"
       placeholder="name@example.com"
-      [class.is-invalid]="emailStatus.isInvalid"
+      [class.is-invalid]="emailInvalid"
     />
     <label for="auth-sign-up-email">Email</label>
-    <div *ngIf="emailStatus.isInvalid" class="invalid-tooltip">
-      {{ emailStatus.errors }}
+    <div class="invalid-tooltip">
+      {{ emailErrors }}
     </div>
   </div>
   <div class="form-floating mb-4 w-100 has-validation">
@@ -35,11 +35,11 @@
       id="auth-sign-up-password"
       [formControlName]="fields.PASSWORD"
       placeholder="Password"
-      [class.is-invalid]="passwordStatus.isInvalid"
+      [class.is-invalid]="passwordInvalid"
     />
     <label for="auth-sign-up-password">Password</label>
-    <div class="invalid-tooltip" *ngIf="fields.PASSWORD">
-      {{ passwordStatus.errors }}
+    <div class="invalid-tooltip">
+      {{ passwordErrors }}
     </div>
   </div>
   <div class="d-flex align-items-baseline py-2 mb-4">

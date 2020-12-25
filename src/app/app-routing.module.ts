@@ -20,7 +20,7 @@ const routes: Routes = [
   },
   {
     path: locations.ADMIN,
-    loadChildren: './admin/admin.module#AdminModule',
+    loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
   },
 ];
 

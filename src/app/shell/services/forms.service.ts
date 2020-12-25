@@ -29,6 +29,8 @@ export class FormsService {
           '',
           [
             Validators.required,
+            Validators.minLength(8),
+            Validators.maxLength(50),
             Validators.pattern(validation.PASSWORD_REG_EXP),
           ],
         ],
@@ -37,7 +39,7 @@ export class FormsService {
           [
             Validators.required,
             Validators.minLength(2),
-            Validators.maxLength(20),
+            Validators.maxLength(50),
           ],
         ],
       },
