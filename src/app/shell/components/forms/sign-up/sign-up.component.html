@@ -1,6 +1,7 @@
 <form class="auth-form" [formGroup]="form" (submit)="submit()">
   <h1 class="h3 mb-4 font-weight-normal">Sign Up</h1>
-  <div class="form-floating mb-4 w-100">
+  <div class="mb-4 w-100">
+    <label for="auth-sign-up-name">Name</label>
     <input
       type="text"
       class="form-control"
@@ -9,12 +10,12 @@
       placeholder="Enter your name"
       [class.is-invalid]="nameInvalid"
     />
-    <label for="auth-sign-up-name">Name</label>
-    <div class="invalid-tooltip">
+    <div class="invalid-feedback">
       {{ nameErrors }}
     </div>
   </div>
-  <div class="form-floating mb-4 w-100">
+  <div class="mb-4 w-100">
+    <label for="auth-sign-up-email">Email</label>
     <input
       type="email"
       class="form-control"
@@ -23,12 +24,12 @@
       placeholder="name@example.com"
       [class.is-invalid]="emailInvalid"
     />
-    <label for="auth-sign-up-email">Email</label>
-    <div class="invalid-tooltip">
+    <div class="invalid-feedback">
       {{ emailErrors }}
     </div>
   </div>
-  <div class="form-floating mb-4 w-100 has-validation">
+  <div class="mb-4 w-100">
+    <label for="auth-sign-up-password">Password</label>
     <input
       type="password"
       class="form-control"
@@ -37,8 +38,7 @@
       placeholder="Password"
       [class.is-invalid]="passwordInvalid"
     />
-    <label for="auth-sign-up-password">Password</label>
-    <div class="invalid-tooltip">
+    <div class="invalid-feedback">
       {{ passwordErrors }}
     </div>
   </div>

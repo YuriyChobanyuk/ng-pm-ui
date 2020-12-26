@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { authActions } from './store/auth';
+import { select, Store } from '@ngrx/store';
+import { authActions, authSelectors } from './store/auth';
+import { Observable } from 'rxjs';
+import { IUser } from '../interfaces';
+import { AppState } from './store/rootState';
+import { routerSelectors } from './store/router';
 
 @Component({
   selector: 'app-shell',
@@ -8,7 +12,10 @@ import { authActions } from './store/auth';
   styleUrls: ['./shell.component.scss'],
 })
 export class ShellComponent implements OnInit {
-  constructor(private store: Store) {}
+  constructor(private store: Store<AppState>) {}
+
+  user$ = this.store.pipe(select(authSelectors.user));
+  isAuthPage$ = this.store.pipe(select(routerSelectors.isAuthPage));
 
   public navigationList = [
     {

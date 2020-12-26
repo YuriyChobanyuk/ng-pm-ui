@@ -1,6 +1,11 @@
 <div class="min-vh-100">
   <app-shell-header [navigationList]="navigationList">
-    <app-auth-control class="user-control"> </app-auth-control>
+    <app-auth-control
+      class="user-control"
+      [isAuthPage]="isAuthPage$ | async"
+      [user]="user$ | async"
+    >
+    </app-auth-control>
   </app-shell-header>
   <div class="shell-content">
     <ng-content></ng-content>

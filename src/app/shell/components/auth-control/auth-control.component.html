@@ -1,9 +1,8 @@
 <div class="auth-control">
   <a
-    class="btn btn-primary text-capitalize"
+    *ngIf="!isAuthPage && !isAuthenticated"
+    class="btn btn-outline-light text-capitalize text-nowrap"
     [routerLink]="authPath"
-    routerLinkActive="active text-white"
-    [routerLinkActiveOptions]="{ exact: true }"
-  >Login</a
+    ><i class="bi bi-box-arrow-in-right mr-2"> </i>Login</a
   >
 </div>

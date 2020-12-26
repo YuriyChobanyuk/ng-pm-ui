@@ -10,9 +10,16 @@ import { locations } from '../../../shared/constants';
 export class AuthControlComponent implements OnInit {
   constructor() {}
 
-  @Input() isAuthPage!: boolean;
+  @Input() isAuthPage!: boolean | null;
   @Input() user!: IUser | null;
-  authPath = locations.AUTH;
+
+  get authPath(): string {
+    return locations.AUTH;
+  }
+
+  get isAuthenticated(): boolean {
+    return !!this.user;
+  }
 
   ngOnInit(): void {}
 }
