@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IUser } from 'src/app/interfaces';
+import { IUser, UserRole } from 'src/app/interfaces';
 import { locations } from '../../../shared/constants';
 
 @Component({
@@ -12,6 +12,16 @@ export class AuthControlComponent implements OnInit {
 
   @Input() isAuthPage!: boolean | null;
   @Input() user!: IUser | null;
+
+  userMenuState: 'closed' | 'open' = 'closed';
+
+  toggleMenu(): void {
+    this.userMenuState = this.userMenuState === 'closed' ? 'open' : 'closed';
+  }
+
+  get avatarImg(): string {
+    return this.user?.img_path || 'assets/images/avatar-default-icon.png';
+  }
 
   get authPath(): string {
     return locations.AUTH;
