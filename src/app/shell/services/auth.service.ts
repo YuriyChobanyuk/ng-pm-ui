@@ -56,12 +56,16 @@ export class AuthService {
     this.localStorageService.setAccessToken(token);
   }
 
+  get hasAccessToken(): boolean {
+    return !!this.localStorageService.getAccessToken();
+  }
+
   getAuthHeader(): string {
     return `${BEARER} ${this.accessToken}`;
   }
 
   logout(): void {
-    this.accessToken = '';
+    this.localStorageService.deleteAccessToken();
     this.store.dispatch(logout());
     this.router.navigateByUrl(locations.AUTH);
   }

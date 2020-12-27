@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IUser, UserRole } from 'src/app/interfaces';
 import { locations } from '../../../shared/constants';
 
@@ -12,6 +12,8 @@ export class AuthControlComponent implements OnInit {
 
   @Input() isAuthPage!: boolean | null;
   @Input() user!: IUser | null;
+
+  @Output() logout: EventEmitter<void> = new EventEmitter<void>();
 
   userMenuState: 'closed' | 'open' = 'closed';
 
@@ -32,4 +34,8 @@ export class AuthControlComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  handleLogout(): void {
+    this.logout.emit();
+  }
 }

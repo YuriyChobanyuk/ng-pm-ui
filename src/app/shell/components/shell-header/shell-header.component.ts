@@ -10,7 +10,6 @@ export class ShellHeaderComponent implements OnInit {
   constructor() {}
 
   @Input() navigationList!: NavigationListItem[];
-  @Input() isAuthenticated = false;
 
   ngOnInit(): void {}
 }

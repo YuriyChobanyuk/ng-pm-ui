@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { authActions, authSelectors } from './store/auth';
-import { Observable } from 'rxjs';
-import { IUser } from '../interfaces';
 import { AppState } from './store/rootState';
 import { routerSelectors } from './store/router';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-shell',
@@ -12,7 +11,10 @@ import { routerSelectors } from './store/router';
   styleUrls: ['./shell.component.scss'],
 })
 export class ShellComponent implements OnInit {
-  constructor(private store: Store<AppState>) {}
+  constructor(
+    private store: Store<AppState>,
+    private authService: AuthService,
+  ) {}
 
   user$ = this.store.pipe(select(authSelectors.user));
   isAuthPage$ = this.store.pipe(select(routerSelectors.isAuthPage));
@@ -30,5 +32,9 @@ export class ShellComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.dispatch(authActions.getCurrentUser());
+  }
+
+  handleLogout(): void {
+    this.authService.logout();
   }
 }
