@@ -1,9 +1,13 @@
+@import '~bootstrap/scss/bootstrap';
+
 @mixin auth-form {
   width: 100%;
-  max-width: 330px;
-  padding: 15px;
-  margin: 5rem auto 0;
+  max-width: 25rem;
+  padding: 2rem 3rem 1rem;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: rgba($light, 0.7);
+  border-radius: 1rem;
 }

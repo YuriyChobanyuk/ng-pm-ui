@@ -1,12 +1,10 @@
-<div>
-  <app-login
-    *ngIf="isLogin"
-    (toggleLogin)="toggleIsLogin()"
-    (submitLogin)="handleLoginSubmit($event)"
-  ></app-login>
-  <app-sign-up
-    *ngIf="!isLogin"
-    (toggleLogin)="toggleIsLogin()"
-    (submitSignUp)="handleSignUpSubmit($event)"
-  ></app-sign-up>
-</div>
+<app-login
+  *ngIf="isLogin"
+  (toggleLogin)="toggleIsLogin()"
+  (submitLogin)="handleLoginSubmit($event)"
+></app-login>
+<app-sign-up
+  *ngIf="!isLogin"
+  (toggleLogin)="toggleIsLogin()"
+  (submitSignUp)="handleSignUpSubmit($event)"
+></app-sign-up>

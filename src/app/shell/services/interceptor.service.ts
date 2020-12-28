@@ -36,10 +36,7 @@ export class InterceptorService implements HttpInterceptor {
         () => {
           observer.next();
           observer.complete();
-        },
-        (error) => {
-          return throwError(error);
-        },
+        }
       );
     });
   }

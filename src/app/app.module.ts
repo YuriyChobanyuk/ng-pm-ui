@@ -11,7 +11,6 @@ import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ShellComponent } from './shell/shell.component';
-import { AboutComponent } from './shell/pages/about/about.component';
 import { HomeComponent } from './shell/pages/home/home.component';
 import { AuthComponent } from './shell/pages/auth/auth.component';
 import { ShellHeaderComponent } from './shell/components/shell-header/shell-header.component';
@@ -28,7 +27,6 @@ import { effects, reducers } from './shell/store/rootState';
     AppComponent,
     ShellComponent,
     HomeComponent,
-    AboutComponent,
     AuthComponent,
     ShellHeaderComponent,
     AuthControlComponent,

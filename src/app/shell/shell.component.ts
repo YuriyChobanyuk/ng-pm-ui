@@ -19,17 +19,6 @@ export class ShellComponent implements OnInit {
   user$ = this.store.pipe(select(authSelectors.user));
   isAuthPage$ = this.store.pipe(select(routerSelectors.isAuthPage));
 
-  public navigationList = [
-    {
-      label: 'home',
-      link: '',
-    },
-    {
-      label: 'about',
-      link: 'about',
-    },
-  ];
-
   ngOnInit(): void {
     this.store.dispatch(authActions.getCurrentUser());
   }

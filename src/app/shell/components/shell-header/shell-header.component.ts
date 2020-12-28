@@ -9,7 +9,7 @@ import { NavigationListItem } from '../../../interfaces';
 export class ShellHeaderComponent implements OnInit {
   constructor() {}
 
-  @Input() navigationList!: NavigationListItem[];
+  navigationList: NavigationListItem[] = [];
 
   ngOnInit(): void {}
 }

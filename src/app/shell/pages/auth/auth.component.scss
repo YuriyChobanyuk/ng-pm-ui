@@ -1,0 +1,8 @@
+@import "src/styles/variables";
+
+:host {
+  display: block;
+  height: calc(100vh - #{$top-nav-height});
+  padding-top: 4rem;
+  background: url('~src/assets/images/security-background.jpg') no-repeat center top;
+}
