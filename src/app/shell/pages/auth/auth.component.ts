@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginCredentials, SignUpCredentials } from '../../../interfaces';
-import { Store } from '@ngrx/store';
-import { authActions } from '../../store/auth';
+import { select, Store } from '@ngrx/store';
+import { authActions, authSelectors } from '../../store/auth';
+import { AppState } from '../../store/rootState';
 
 @Component({
   selector: 'app-auth',
@@ -9,10 +10,10 @@ import { authActions } from '../../store/auth';
   styleUrls: ['./auth.component.scss'],
 })
 export class AuthComponent implements OnInit {
-  constructor(private store: Store) {}
+  constructor(private store: Store<AppState>) {}
 
   isLogin = true;
-
+  userLoading$ = this.store.pipe(select(authSelectors.loading));
   toggleIsLogin(): void {
     this.isLogin = !this.isLogin;
   }

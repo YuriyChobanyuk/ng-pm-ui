@@ -1,46 +1,59 @@
-<div class="auth-control">
-  <a
-    *ngIf="!isAuthPage && !isAuthenticated"
-    class="btn btn-outline-light text-capitalize text-nowrap"
-    [routerLink]="authPath"
-    ><i class="bi bi-box-arrow-in-right mr-2"> </i>Login</a
-  >
-
-  <div *ngIf="isAuthenticated" class="d-flex align-items-center text-white">
-    <div
-      class="d-inline-block"
-      ngbDropdown
-      #myDrop="ngbDropdown"
-      placement="bottom-right"
-    >
-      <button
-        class="btn btn-dark mr-2 user-menu-button"
-        id="auth-control-button"
-        ngbDropdownAnchor
-        (focus)="myDrop.open()"
-      >
-        {{ user?.name }}
-      </button>
-      <div ngbDropdownMenu aria-labelledby="auth-control-button">
-        <button ngbDropdownItem>
-          <i class="bi bi-person-badge mr-2"></i>Profile
-        </button>
-        <button
-          ngbDropdownItem
-          (click)="handleLogout()"
-          (keydown.enter)="handleLogout()"
-        >
-          <i class="bi bi-box-arrow-left mr-2"></i>Logout
-        </button>
-      </div>
-    </div>
-    <img
-      tabindex="0"
-      class="avatar-img rounded-circle"
-      [src]="avatarImg"
-      alt="Avatar image"
-      (click)="myDrop.toggle()"
-      (keydown.enter)="myDrop.toggle()"
-    />
-  </div>
+<div *ngIf="userLoading; else control">
+  <button class="btn btn-dark" type="button" disabled>
+    <span
+      class="spinner-border spinner-border-sm"
+      role="status"
+      aria-hidden="true"
+    ></span>
+    Loading...
+  </button>
 </div>
+
+<ng-template #control>
+  <div class="auth-control">
+    <a
+      *ngIf="!isAuthPage && !isAuthenticated"
+      class="btn btn-outline-light text-capitalize text-nowrap"
+      [routerLink]="authPath"
+      ><i class="bi bi-box-arrow-in-right mr-2"> </i>Login</a
+    >
+
+    <div *ngIf="isAuthenticated" class="d-flex align-items-center text-white">
+      <div
+        class="d-inline-block"
+        ngbDropdown
+        #myDrop="ngbDropdown"
+        placement="bottom-right"
+      >
+        <button
+          class="btn btn-dark mr-2 user-menu-button"
+          id="auth-control-button"
+          ngbDropdownAnchor
+          (focus)="myDrop.open()"
+        >
+          {{ user?.name }}
+        </button>
+        <div ngbDropdownMenu aria-labelledby="auth-control-button">
+          <button ngbDropdownItem>
+            <i class="bi bi-person-badge mr-2"></i>Profile
+          </button>
+          <button
+            ngbDropdownItem
+            (click)="handleLogout()"
+            (keydown.enter)="handleLogout()"
+          >
+            <i class="bi bi-box-arrow-left mr-2"></i>Logout
+          </button>
+        </div>
+      </div>
+      <img
+        tabindex="0"
+        class="avatar-img rounded-circle"
+        [src]="avatarImg"
+        alt="Avatar image"
+        (click)="myDrop.toggle()"
+        (keydown.enter)="myDrop.toggle()"
+      />
+    </div>
+  </div>
+</ng-template>

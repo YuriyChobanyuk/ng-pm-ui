@@ -4,6 +4,7 @@
       class="user-control"
       [isAuthPage]="isAuthPage$ | async"
       [user]="user$ | async"
+      [userLoading]="userLoading$ | async"
       (logout)="handleLogout()"
     >
     </app-auth-control>

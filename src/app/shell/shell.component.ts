@@ -4,6 +4,7 @@ import { authActions, authSelectors } from './store/auth';
 import { AppState } from './store/rootState';
 import { routerSelectors } from './store/router';
 import { AuthService } from './services/auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-shell',
@@ -17,6 +18,9 @@ export class ShellComponent implements OnInit {
   ) {}
 
   user$ = this.store.pipe(select(authSelectors.user));
+  userLoading$: Observable<boolean> = this.store.pipe(
+    select(authSelectors.loading),
+  );
   isAuthPage$ = this.store.pipe(select(routerSelectors.isAuthPage));
 
   ngOnInit(): void {

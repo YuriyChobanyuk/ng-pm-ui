@@ -2,10 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsService } from '../../../services/forms.service';
 import { ValidationService } from '../../../services/validation.service';
 import { AbstractControl, FormGroup } from '@angular/forms';
-import {
-  LoginCredentials,
-  LoginFormFields,
-} from '../../../../interfaces';
+import { LoginCredentials, LoginFormFields } from '../../../../interfaces';
 
 @Component({
   selector: 'app-login',

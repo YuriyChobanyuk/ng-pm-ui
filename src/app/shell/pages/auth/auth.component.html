@@ -1,10 +1,18 @@
-<app-login
-  *ngIf="isLogin"
-  (toggleLogin)="toggleIsLogin()"
-  (submitLogin)="handleLoginSubmit($event)"
-></app-login>
-<app-sign-up
-  *ngIf="!isLogin"
-  (toggleLogin)="toggleIsLogin()"
-  (submitSignUp)="handleSignUpSubmit($event)"
-></app-sign-up>
+<div *ngIf="userLoading$ | async; else forms" class="loader-placeholder">
+  <div class="spinner-border text-light" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+
+<ng-template #forms>
+  <app-login
+    *ngIf="isLogin"
+    (toggleLogin)="toggleIsLogin()"
+    (submitLogin)="handleLoginSubmit($event)"
+  ></app-login>
+  <app-sign-up
+    *ngIf="!isLogin"
+    (toggleLogin)="toggleIsLogin()"
+    (submitSignUp)="handleSignUpSubmit($event)"
+  ></app-sign-up>
+</ng-template>

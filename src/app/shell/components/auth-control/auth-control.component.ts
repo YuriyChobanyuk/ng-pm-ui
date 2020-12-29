@@ -12,6 +12,7 @@ export class AuthControlComponent implements OnInit {
 
   @Input() isAuthPage!: boolean | null;
   @Input() user!: IUser | null;
+  @Input() userLoading!: boolean | null;
 
   @Output() logout: EventEmitter<void> = new EventEmitter<void>();
 
