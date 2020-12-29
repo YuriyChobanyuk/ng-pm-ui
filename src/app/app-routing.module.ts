@@ -3,6 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './shell/pages/home/home.component';
 import { AuthComponent } from './shell/pages/auth/auth.component';
 import { locations } from './shared/constants';
+import { AdminGuard } from './shell/guards/admin.guard';
+import { UserGuard } from './shell/guards/user.guard';
 
 const routes: Routes = [
   {
@@ -17,6 +19,12 @@ const routes: Routes = [
     path: locations.ADMIN,
     loadChildren: () =>
       import('./admin/admin.module').then((m) => m.AdminModule),
+    canActivate: [AdminGuard],
+  },
+  {
+    path: locations.USER,
+    loadChildren: () => import('./user/user.module').then((m) => m.UserModule),
+    canActivate: [UserGuard],
   },
 ];
 

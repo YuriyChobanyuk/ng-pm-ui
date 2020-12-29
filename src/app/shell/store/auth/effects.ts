@@ -12,14 +12,25 @@ import {
   signUpError,
   signUpSuccess,
 } from './actions';
-import { catchError, map, mergeMap, takeUntil } from 'rxjs/operators';
-import { LoginCredentials, SignUpCredentials } from '../../../interfaces';
+import { catchError, map, mergeMap, takeUntil, tap } from 'rxjs/operators';
+import {
+  IUser,
+  LoginCredentials,
+  SignUpCredentials,
+  UserRole,
+} from '../../../interfaces';
 import { of } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
+import { locations } from '../../../shared/constants';
 
 @Injectable()
 export class AuthEffects {
-  constructor(private actions$: Actions, private authService: AuthService) {}
+  constructor(
+    private actions$: Actions,
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
   login$ = createEffect(() =>
     this.actions$.pipe(
@@ -64,5 +75,25 @@ export class AuthEffects {
         ),
       ),
     ),
+  );
+
+  successRedirect$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(loginSuccess.type, signUpSuccess.type),
+        tap(({ user }: { user: IUser }) => {
+          switch (user.role) {
+            case UserRole.ADMIN: {
+              this.router.navigate([locations.ADMIN]);
+              break;
+            }
+            case UserRole.USER: {
+              this.router.navigate([locations.USER]);
+              break;
+            }
+          }
+        }),
+      ),
+    { dispatch: false },
   );
 }
