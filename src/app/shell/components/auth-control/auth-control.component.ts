@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { IUser, UserRole } from 'src/app/interfaces';
+import { IUser } from 'src/app/interfaces';
 import { locations } from '../../../shared/constants';
 
 @Component({
@@ -15,12 +15,6 @@ export class AuthControlComponent implements OnInit {
   @Input() userLoading!: boolean | null;
 
   @Output() logout: EventEmitter<void> = new EventEmitter<void>();
-
-  userMenuState: 'closed' | 'open' = 'closed';
-
-  toggleMenu(): void {
-    this.userMenuState = this.userMenuState === 'closed' ? 'open' : 'closed';
-  }
 
   get avatarImg(): string {
     return this.user?.img_path || 'assets/images/avatar-default-icon.png';
