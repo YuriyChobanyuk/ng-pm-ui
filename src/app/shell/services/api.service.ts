@@ -1,29 +1,39 @@
 import { Injectable } from '@angular/core';
 import { endpoints } from '../../shared/constants';
+import { Observable } from 'rxjs';
+import {
+  AuthResponse,
+  IUser,
+  LoginCredentials,
+  SignUpCredentials,
+} from '../../interfaces';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
-  private getUrl = (path: string): string => {
-    return `${endpoints.API_URL}${path}`;
-  };
-
-  get loginEndpoint(): string {
-    return this.getUrl(endpoints.LOGIN);
+  currentUserRequest(): Observable<IUser> {
+    return this.http.get<IUser>(endpoints.CURRENT_USER);
   }
 
-  get currentUserEndpoint(): string {
-    return this.getUrl(endpoints.CURRENT_USER);
+  loginRequest(payload: LoginCredentials): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(endpoints.LOGIN, payload, {
+      withCredentials: true,
+    });
   }
 
-  get refreshEndpoint(): string {
-    return this.getUrl(endpoints.REFRESH);
+  refreshRequest(): Observable<AuthResponse> {
+    return this.http.get<AuthResponse>(endpoints.REFRESH, {
+      withCredentials: true,
+    });
   }
 
-  get signUpEndpoint(): string {
-    return this.getUrl(endpoints.SIGN_UP);
+  signUpRequest(payload: SignUpCredentials): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(endpoints.SIGN_UP, payload, {
+      withCredentials: true,
+    });
   }
 }

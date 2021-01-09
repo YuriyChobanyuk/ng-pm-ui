@@ -19,45 +19,16 @@ import { BEARER, locations } from '../../shared/constants';
 })
 export class AuthService {
   constructor(
-    private client: HttpClient,
-    private api: ApiService,
     private localStorageService: LocalStorageService,
     private router: Router,
     private store: Store,
   ) {}
-
-  currentUserRequest(): Observable<IUser> {
-    return this.client.get<IUser>(this.api.currentUserEndpoint);
-  }
-
-  loginRequest(payload: LoginCredentials): Observable<AuthResponse> {
-    return this.client.post<AuthResponse>(this.api.loginEndpoint, payload, {
-      withCredentials: true,
-    });
-  }
-
-  refreshRequest(): Observable<AuthResponse> {
-    return this.client.get<AuthResponse>(this.api.refreshEndpoint, {
-      withCredentials: true,
-    });
-  }
-
-  signUpRequest(payload: SignUpCredentials): Observable<AuthResponse> {
-    return this.client.post<AuthResponse>(this.api.signUpEndpoint, payload, {
-      withCredentials: true,
-    });
-  }
-
   get accessToken(): string {
     return this.localStorageService.getAccessToken();
   }
 
   set accessToken(token: string) {
     this.localStorageService.setAccessToken(token);
-  }
-
-  get hasAccessToken(): boolean {
-    return !!this.localStorageService.getAccessToken();
   }
 
   getAuthHeader(): string {

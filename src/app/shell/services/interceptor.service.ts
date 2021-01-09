@@ -6,14 +6,15 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Observable, Subject, throwError } from 'rxjs';
-import { catchError, switchMap, tap } from 'rxjs/operators';
+import {catchError, finalize, switchMap, takeUntil, tap} from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { StatusCodes } from 'http-status-codes';
 import { endpoints } from '../../shared/constants';
+import { ApiService } from './api.service';
 
 @Injectable()
 export class InterceptorService implements HttpInterceptor {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private api: ApiService) {}
 
   private refreshTokenInProgress = false;
   private tokenRefreshedSource = new Subject();
@@ -32,12 +33,10 @@ export class InterceptorService implements HttpInterceptor {
 
   dumpRefresh(): Observable<any> {
     return new Observable((observer) => {
-      this.tokenRefreshed$.subscribe(
-        () => {
-          observer.next();
-          observer.complete();
-        }
-      );
+      this.tokenRefreshed$.subscribe(() => {
+        observer.next();
+        observer.complete();
+      });
     });
   }
 
@@ -45,27 +44,28 @@ export class InterceptorService implements HttpInterceptor {
     this.refreshTokenInProgress = true;
 
     // TODO move refresh to store
-    return this.authService.refreshRequest().pipe(
+    return this.api.refreshRequest().pipe(
       tap(({ token }) => {
         this.authService.accessToken = token;
-        this.refreshTokenInProgress = false;
         this.tokenRefreshedSource.next();
       }),
       catchError((e) => {
-        this.refreshTokenInProgress = false;
         this.authService.logout();
         return throwError(e);
       }),
+      finalize(() => {
+        this.refreshTokenInProgress = false;
+      })
     );
   }
 
-  refreshToken(): Observable<any> {
+  private refreshToken(): Observable<any> {
     return this.refreshTokenInProgress
       ? this.dumpRefresh()
       : this.actualRefresh();
   }
 
-  handleResponseError(
+  private handleResponseError(
     error: HttpErrorResponse,
     request: HttpRequest<any>,
     next: HttpHandler,
