@@ -5,22 +5,23 @@ import {
   HttpInterceptor,
   HttpRequest,
 } from '@angular/common/http';
-import { Observable, Subject, throwError } from 'rxjs';
-import {catchError, finalize, switchMap, takeUntil, tap} from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, switchMap, take, tap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { StatusCodes } from 'http-status-codes';
 import { endpoints } from '../../shared/constants';
-import { ApiService } from './api.service';
+import { select, Store } from '@ngrx/store';
+import { AppState } from '../store/rootState';
+import { authActions, authSelectors } from '../store/auth';
 
 @Injectable()
 export class InterceptorService implements HttpInterceptor {
-  constructor(private authService: AuthService, private api: ApiService) {}
+  constructor(
+    private authService: AuthService,
+    private store: Store<AppState>,
+  ) {}
 
-  private refreshTokenInProgress = false;
-  private tokenRefreshedSource = new Subject();
-  private tokenRefreshed$ = this.tokenRefreshedSource.asObservable();
-
-  addAuthHeader(request: HttpRequest<any>): HttpRequest<any> {
+  private addAuthHeader(request: HttpRequest<any>): HttpRequest<any> {
     const authHeader = this.authService.getAuthHeader();
     return authHeader
       ? request.clone({
@@ -31,38 +32,26 @@ export class InterceptorService implements HttpInterceptor {
       : request;
   }
 
-  dumpRefresh(): Observable<any> {
+  private dumpRefresh(): Observable<any> {
     return new Observable((observer) => {
-      this.tokenRefreshed$.subscribe(() => {
+      this.authService.tokenRefreshed$.subscribe(() => {
         observer.next();
         observer.complete();
       });
     });
   }
 
-  actualRefresh(): Observable<any> {
-    this.refreshTokenInProgress = true;
-
-    // TODO move refresh to store
-    return this.api.refreshRequest().pipe(
-      tap(({ token }) => {
-        this.authService.accessToken = token;
-        this.tokenRefreshedSource.next();
-      }),
-      catchError((e) => {
-        this.authService.logout();
-        return throwError(e);
-      }),
-      finalize(() => {
-        this.refreshTokenInProgress = false;
-      })
-    );
-  }
-
   private refreshToken(): Observable<any> {
-    return this.refreshTokenInProgress
-      ? this.dumpRefresh()
-      : this.actualRefresh();
+    return this.store.pipe(
+      select(authSelectors.refreshing),
+      take(1),
+      tap((isRefreshing) => {
+        if (!isRefreshing) {
+          this.store.dispatch(authActions.refresh());
+        }
+      }),
+      switchMap(() => this.dumpRefresh()),
+    );
   }
 
   private handleResponseError(
@@ -82,12 +71,9 @@ export class InterceptorService implements HttpInterceptor {
             return next.handle(request);
           }),
           catchError((e: HttpErrorResponse) => {
-            if (e.status !== StatusCodes.UNAUTHORIZED) {
-              return this.handleResponseError(e, request, next);
-            } else {
-              this.authService.logout();
-              return throwError(e);
-            }
+            return e.status !== StatusCodes.UNAUTHORIZED
+              ? this.handleResponseError(e, request, next)
+              : throwError(e);
           }),
         );
       }

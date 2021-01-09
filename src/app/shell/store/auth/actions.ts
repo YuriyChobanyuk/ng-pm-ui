@@ -41,3 +41,7 @@ export const signUpSuccess = createAction(
 );
 
 export const signUpError = createAction('[Auth] Sign Up Error');
+
+export const refresh = createAction('[Auth] Refresh');
+export const refreshSuccess = createAction('[Auth] Refresh Success');
+export const refreshError = createAction('[Auth] Refresh Error');

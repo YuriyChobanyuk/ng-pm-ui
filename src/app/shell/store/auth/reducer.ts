@@ -8,6 +8,9 @@ import {
   loginError,
   loginSuccess,
   logout,
+  refresh,
+  refreshError,
+  refreshSuccess,
   signUp,
   signUpError,
   signUpSuccess,
@@ -17,12 +20,14 @@ export interface AuthState {
   user: IUser | null;
   loading: boolean;
   error: boolean;
+  refreshing: boolean;
 }
 
 const initialState: AuthState = {
   user: null,
   loading: false,
   error: false,
+  refreshing: false,
 };
 
 export const authReducer = createReducer(
@@ -43,10 +48,19 @@ export const authReducer = createReducer(
     loading: false,
     error: true,
   })),
+  on(refresh, (state) => ({
+    ...state,
+    refreshing: true,
+  })),
+  on(refreshSuccess, refreshError, (state) => ({
+    ...state,
+    refreshing: false,
+  })),
   on(logout, (state) => ({
     ...state,
     user: null,
     error: false,
     loading: false,
+    refreshing: false,
   })),
 );

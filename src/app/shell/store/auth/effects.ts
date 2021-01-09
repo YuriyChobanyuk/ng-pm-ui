@@ -8,13 +8,23 @@ import {
   loginError,
   loginSuccess,
   logout,
+  refresh,
+  refreshError,
+  refreshSuccess,
   signUp,
   signUpError,
   signUpSuccess,
 } from './actions';
-import { catchError, map, mergeMap, takeUntil, tap } from 'rxjs/operators';
 import {
-  IUser,
+  catchError,
+  exhaustMap,
+  finalize,
+  map,
+  mergeMap,
+  takeUntil,
+  tap,
+} from 'rxjs/operators';
+import {
   LoginCredentials,
   SignUpCredentials,
   UserRole,
@@ -24,6 +34,8 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { locations } from '../../../shared/constants';
 import { ApiService } from '../../services/api.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { StatusCodes } from 'http-status-codes';
 
 @Injectable()
 export class AuthEffects {
@@ -36,14 +48,14 @@ export class AuthEffects {
 
   login$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(login.type),
+      ofType(login),
       mergeMap(({ credentials }: { credentials: LoginCredentials }) =>
         this.api.loginRequest(credentials).pipe(
           map(({ token, data: { user } }) => {
             this.authService.accessToken = token;
             return loginSuccess({ user });
           }),
-          takeUntil(this.actions$.pipe(ofType(logout.type))),
+          takeUntil(this.actions$.pipe(ofType(logout))),
           catchError(() => of(loginError())),
         ),
       ),
@@ -52,14 +64,14 @@ export class AuthEffects {
 
   signUp$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(signUp.type),
+      ofType(signUp),
       mergeMap(({ credentials }: { credentials: SignUpCredentials }) =>
         this.api.signUpRequest(credentials).pipe(
           map(({ token, data: { user } }) => {
             this.authService.accessToken = token;
             return signUpSuccess({ user });
           }),
-          takeUntil(this.actions$.pipe(ofType(logout.type))),
+          takeUntil(this.actions$.pipe(ofType(logout))),
           catchError(() => of(signUpError())),
         ),
       ),
@@ -68,12 +80,36 @@ export class AuthEffects {
 
   getCurrentUser$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(getCurrentUser.type),
+      ofType(getCurrentUser),
       mergeMap(() =>
         this.api.currentUserRequest().pipe(
           map((user) => getCurrentUserSuccess({ user })),
+          takeUntil(this.actions$.pipe(ofType(logout))),
           catchError(() => of(getCurrentUserError())),
-          takeUntil(this.actions$.pipe(ofType(logout.type))),
+        ),
+      ),
+    ),
+  );
+
+  refresh$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(refresh),
+      exhaustMap(() =>
+        this.api.refreshRequest().pipe(
+          map(({ data: { user }, token }) => {
+            this.authService.accessToken = token;
+            return refreshSuccess();
+          }),
+          catchError((error: HttpErrorResponse) => {
+            if (error?.status === StatusCodes.UNAUTHORIZED) {
+              this.authService.logout();
+            }
+            return of(refreshError());
+          }),
+          takeUntil(this.actions$.pipe(ofType(logout))),
+          finalize(() => {
+            this.authService.tokenRefreshed$.next();
+          }),
         ),
       ),
     ),
@@ -82,8 +118,8 @@ export class AuthEffects {
   successRedirect$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(loginSuccess.type, signUpSuccess.type),
-        tap(({ user }: { user: IUser }) => {
+        ofType(loginSuccess, signUpSuccess),
+        tap(({ user }) => {
           switch (user.role) {
             case UserRole.ADMIN: {
               this.router.navigate([locations.ADMIN]);
