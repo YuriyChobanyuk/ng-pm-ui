@@ -54,6 +54,28 @@ export class InterceptorService implements HttpInterceptor {
     );
   }
 
+  private handleUnauthorizedError(
+    error: HttpErrorResponse,
+    request: HttpRequest<any>,
+    next: HttpHandler,
+  ): Observable<any> {
+    if (error.url?.includes(endpoints.REFRESH)) {
+      return throwError(error);
+    }
+
+    return this.refreshToken().pipe(
+      switchMap(() => {
+        request = this.addAuthHeader(request);
+        return next.handle(request);
+      }),
+      catchError((e: HttpErrorResponse) => {
+        return e.status !== StatusCodes.UNAUTHORIZED
+          ? this.handleResponseError(e, request, next)
+          : throwError(e);
+      }),
+    );
+  }
+
   private handleResponseError(
     error: HttpErrorResponse,
     request: HttpRequest<any>,
@@ -61,21 +83,7 @@ export class InterceptorService implements HttpInterceptor {
   ): Observable<any> {
     switch (error.status) {
       case StatusCodes.UNAUTHORIZED: {
-        if (error.url?.includes(endpoints.REFRESH)) {
-          return throwError(error);
-        }
-
-        return this.refreshToken().pipe(
-          switchMap(() => {
-            request = this.addAuthHeader(request);
-            return next.handle(request);
-          }),
-          catchError((e: HttpErrorResponse) => {
-            return e.status !== StatusCodes.UNAUTHORIZED
-              ? this.handleResponseError(e, request, next)
-              : throwError(e);
-          }),
-        );
+        return this.handleUnauthorizedError(error, request, next);
       }
 
       // TODO handle all other errors
