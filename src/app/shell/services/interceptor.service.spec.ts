@@ -13,11 +13,21 @@ import {
 import { AuthService } from './auth.service';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { ApiService } from './api.service';
-import { endpoints } from '../../shared/constants';
-import { UserRole } from '../../interfaces';
-import { authActions, authSelectors } from '../store/auth';
+import { BEARER, endpoints } from '../../shared/constants';
+import { AuthResponse, UserRole } from '../../interfaces';
+import {
+  authActions,
+  AuthEffects,
+  authReducer,
+  authSelectors,
+  AuthState,
+} from '../store/auth';
 import { Subject } from 'rxjs';
 import { respondUnauthorized } from '../../shared/helpers/http.helpers';
+import { Store, StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { RouterTestingModule } from '@angular/router/testing';
+import { LocalStorageService } from './local-storage.service';
 
 describe('InterceptorService', () => {
   type AuthServiceSpy = jasmine.SpyObj<AuthService>;
@@ -131,5 +141,101 @@ describe('InterceptorService', () => {
     respondUnauthorized(req);
 
     expect(dispatchSpy).not.toHaveBeenCalled();
+  });
+});
+
+describe('InterceptorService integration tests', () => {
+  let service: InterceptorService;
+  let httpMock: HttpTestingController;
+  let apiService: ApiService;
+  let store: Store<{ auth: AuthState }>;
+  let authService: AuthService;
+  let localStorageService: LocalStorageService;
+
+  beforeEach(() => {
+    let token = 'default';
+    localStorageService = {
+      getAccessToken(): string {
+        return token;
+      },
+
+      setAccessToken(newToken: string): void {
+        token = newToken;
+      },
+
+      deleteAccessToken(): void {
+        token = '';
+      },
+    };
+
+    TestBed.configureTestingModule({
+      imports: [
+        HttpClientTestingModule,
+        StoreModule.forRoot({
+          auth: authReducer,
+        }),
+        EffectsModule.forRoot([AuthEffects]),
+        RouterTestingModule,
+      ],
+      providers: [
+        AuthService,
+        ApiService,
+        {
+          provide: LocalStorageService,
+          useValue: localStorageService,
+        },
+        {
+          provide: HTTP_INTERCEPTORS,
+          useClass: InterceptorService,
+          multi: true,
+        },
+      ],
+    });
+    service = TestBed.inject(HTTP_INTERCEPTORS).find(
+      (interceptor: HttpInterceptor) => {
+        return interceptor instanceof InterceptorService;
+      },
+    ) as InterceptorService;
+    httpMock = TestBed.inject(HttpTestingController);
+    store = TestBed.inject(Store);
+    apiService = TestBed.inject(ApiService);
+    authService = TestBed.inject(AuthService);
+  });
+
+  afterEach(() => {
+    httpMock.verify();
+  });
+
+  it('should dispatch refresh only once', () => {
+    const refreshedToken = 'refreshed token';
+    apiService.currentUserRequest().subscribe(() => {});
+    apiService.currentUserRequest().subscribe(() => {});
+
+    const req = httpMock.match(endpoints.CURRENT_USER);
+    respondUnauthorized(req[0]);
+    respondUnauthorized(req[1]);
+
+    const refreshReq = httpMock.expectOne(endpoints.REFRESH);
+    expect(refreshReq.request).toBeTruthy();
+    const authResponse: AuthResponse = {
+      data: {
+        user: {
+          role: UserRole.USER,
+          img_path: '',
+          name: 'John Doe',
+          id: 'user_id',
+          email: 'some@mail.com',
+        },
+      },
+      token: refreshedToken,
+    };
+
+    refreshReq.flush(authResponse);
+
+    const retryReq = httpMock.match(endpoints.CURRENT_USER);
+    expect(retryReq).toHaveSize(2);
+    expect(retryReq[0].request.headers.get('Authorization')).toBe(
+      `${BEARER} ${refreshedToken}`,
+    );
   });
 });
