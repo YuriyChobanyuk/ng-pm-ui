@@ -7,20 +7,17 @@ import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
+import { userStub } from '../../shared/helpers/stubs';
 
 describe('ApiService', () => {
   let service: ApiService;
-  let httpTestingController: HttpTestingController;
+  let httpMock: HttpTestingController;
 
   const authResponse: AuthResponse = {
     token: 'AUTH_TOKEN',
     data: {
       user: {
-        role: UserRole.USER,
-        img_path: '',
-        name: 'John Doe',
-        id: 'user_id',
-        email: 'some@mail.com',
+        ...userStub,
       },
     },
   };
@@ -30,7 +27,11 @@ describe('ApiService', () => {
       imports: [HttpClientTestingModule],
     });
     service = TestBed.inject(ApiService);
-    httpTestingController = TestBed.inject(HttpTestingController);
+    httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => {
+    httpMock.verify();
   });
 
   it('should make login request', () => {
@@ -42,12 +43,10 @@ describe('ApiService', () => {
     service.loginRequest(credentials).subscribe((res) => {
       expect(res).toEqual(authResponse);
     });
-
-    const loginRequest = httpTestingController.expectOne(endpoints.LOGIN);
-
+    const loginRequest = httpMock.expectOne(endpoints.LOGIN);
     loginRequest.flush(authResponse);
-
-    httpTestingController.verify();
+    expect(loginRequest.request.method).toBe('POST');
+    expect(loginRequest.request.body).toEqual(credentials);
   });
 
   it('should make refresh request', () => {
@@ -55,10 +54,9 @@ describe('ApiService', () => {
       expect(res).toEqual(authResponse);
     });
 
-    const refreshRequest = httpTestingController.expectOne(endpoints.REFRESH);
-
+    const refreshRequest = httpMock.expectOne(endpoints.REFRESH);
     refreshRequest.flush(authResponse);
 
-    httpTestingController.verify();
+    expect(refreshRequest.request.method).toBe('GET');
   });
 });

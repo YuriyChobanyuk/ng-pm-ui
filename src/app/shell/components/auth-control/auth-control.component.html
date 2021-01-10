@@ -1,11 +1,11 @@
 <div *ngIf="userLoading; else control">
-  <button class="btn btn-dark" type="button" disabled>
+  <button class="auth-control-spinner btn btn-dark" type="button" disabled>
     <span
       class="spinner-border spinner-border-sm"
       role="status"
       aria-hidden="true"
-    ></span>
-    Loading...
+    ></span
+    >Loading...
   </button>
 </div>
 
@@ -15,6 +15,7 @@
       *ngIf="!isAuthPage && !isAuthenticated"
       class="btn btn-outline-light text-capitalize text-nowrap"
       [routerLink]="authPath"
+      aria-label="login link"
       ><i class="bi bi-box-arrow-in-right mr-2"> </i>Login</a
     >
 
@@ -22,14 +23,14 @@
       <div
         class="d-inline-block"
         ngbDropdown
-        #myDrop="ngbDropdown"
+        #userMenuDrop="ngbDropdown"
         placement="bottom-right"
       >
         <button
           class="btn btn-dark mr-2 user-menu-button"
           id="auth-control-button"
           ngbDropdownAnchor
-          (focus)="myDrop.open()"
+          (focus)="userMenuDrop.open()"
         >
           {{ user?.name }}
         </button>
@@ -49,10 +50,10 @@
       <img
         tabindex="0"
         class="avatar-img rounded-circle"
-        [src]="avatarImg"
+        [src]="user?.img_path || defaultAvatarImg"
         alt="Avatar image"
-        (click)="myDrop.toggle()"
-        (keydown.enter)="myDrop.toggle()"
+        (click)="userMenuDrop.toggle()"
+        (keydown.enter)="userMenuDrop.toggle()"
       />
     </div>
   </div>

@@ -1,6 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { IUser } from 'src/app/interfaces';
-import { locations } from '../../../shared/constants';
+import { DEFAULT_AVATAR_PATH, locations } from '../../../shared/constants';
 
 @Component({
   selector: 'app-auth-control',
@@ -10,15 +16,13 @@ import { locations } from '../../../shared/constants';
 export class AuthControlComponent implements OnInit {
   constructor() {}
 
-  @Input() isAuthPage!: boolean | null;
+  @Input() isAuthPage!: boolean;
   @Input() user!: IUser | null;
-  @Input() userLoading!: boolean | null;
+  @Input() userLoading!: boolean;
 
   @Output() logout: EventEmitter<void> = new EventEmitter<void>();
 
-  get avatarImg(): string {
-    return this.user?.img_path || 'assets/images/avatar-default-icon.png';
-  }
+  defaultAvatarImg = DEFAULT_AVATAR_PATH;
 
   get authPath(): string {
     return locations.AUTH;

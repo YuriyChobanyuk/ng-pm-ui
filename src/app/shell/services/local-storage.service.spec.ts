@@ -6,12 +6,10 @@ import { ACCESS_TOKEN_KEY } from '../../shared/constants';
 
 describe('LocalStorageService', () => {
   let service: LocalStorageService;
-  let localStorageSpy: jasmine.SpyObj<Storage>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(LocalStorageService);
-    localStorageSpy = jasmine.createSpyObj('localStorage', ['getItem']);
   });
 
   it('should return accessToken from local storage', () => {
@@ -24,6 +22,14 @@ describe('LocalStorageService', () => {
 
     expect(getItemSpy).toHaveBeenCalledWith(ACCESS_TOKEN_KEY);
     expect(token).toBe(accessToken);
+  });
+
+  it('should return empty token if no value in storage', () => {
+    spyOn(localStorage, 'getItem').and.returnValue(null);
+
+    const token = service.getAccessToken();
+
+    expect(token).toBe('');
   });
 
   it('should set access token to local storage', () => {

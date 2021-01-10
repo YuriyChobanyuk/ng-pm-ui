@@ -9,32 +9,27 @@ import { logout } from '../store/auth/actions';
 import { Store } from '@ngrx/store';
 
 describe('AuthService', () => {
-  type ApiServiceSpy = jasmine.SpyObj<ApiService>;
-  type LocalStorageServiceSpy = jasmine.SpyObj<LocalStorageService>;
-  type RouterSpy = jasmine.SpyObj<Router>;
-
   let service: AuthService;
+  let apiSpy: jasmine.SpyObj<ApiService>;
+  let lsSpy: jasmine.SpyObj<LocalStorageService>;
+  let storeSpy: jasmine.SpyObj<Store>;
+  let routerSpy: jasmine.SpyObj<Router>;
 
   beforeEach(() => {
-    const apiSpy: ApiServiceSpy = jasmine.createSpyObj('ApiService', [
+    apiSpy = jasmine.createSpyObj('ApiService', [
       'loginEndpoint',
       'currentUserEndpoint',
       'signUpEndpoint',
     ]);
 
-    const lsSpy: LocalStorageServiceSpy = jasmine.createSpyObj(
-      'LocalStorageService',
-      ['getAccessToken', 'deleteAccessToken'],
-    );
-
-    const routerSpy: RouterSpy = jasmine.createSpyObj('Router', [
-      'navigate',
-      'navigateByUrl',
+    lsSpy = jasmine.createSpyObj('LocalStorageService', [
+      'getAccessToken',
+      'deleteAccessToken',
     ]);
 
-    const storeSpy: jasmine.SpyObj<Store> = jasmine.createSpyObj('Store', [
-      'dispatch',
-    ]);
+    routerSpy = jasmine.createSpyObj('Router', ['navigate', 'navigateByUrl']);
+
+    storeSpy = jasmine.createSpyObj('Store', ['dispatch']);
 
     TestBed.configureTestingModule({
       providers: [
@@ -67,16 +62,11 @@ describe('AuthService', () => {
   });
 
   it('should logout', () => {
-    const routerSpy = TestBed.inject(Router);
-    const storeSpy = TestBed.inject(Store);
-    const localStorageServiceSpy = TestBed.inject(
-      LocalStorageService,
-    ) as LocalStorageServiceSpy;
     const authPath = 'auth';
 
     service.logout();
 
-    expect(localStorageServiceSpy.deleteAccessToken).toHaveBeenCalledTimes(1);
+    expect(lsSpy.deleteAccessToken).toHaveBeenCalledTimes(1);
     expect(routerSpy.navigateByUrl).toHaveBeenCalledOnceWith(authPath);
     expect(storeSpy.dispatch).toHaveBeenCalledWith(logout());
   });

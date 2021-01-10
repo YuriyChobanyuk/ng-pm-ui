@@ -14,7 +14,7 @@ import { AuthService } from './auth.service';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { ApiService } from './api.service';
 import { BEARER, endpoints } from '../../shared/constants';
-import { AuthResponse, UserRole } from '../../interfaces';
+import { AuthResponse } from '../../interfaces';
 import {
   authActions,
   AuthEffects,
@@ -28,6 +28,8 @@ import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LocalStorageService } from './local-storage.service';
+import { userStub } from '../../shared/helpers/stubs';
+import { getLocalStorageServiceStub } from './test-utils';
 
 describe('InterceptorService', () => {
   type AuthServiceSpy = jasmine.SpyObj<AuthService>;
@@ -73,13 +75,7 @@ describe('InterceptorService', () => {
 
   it('should append authorisation header', () => {
     const token = 'test token';
-    const testUser = {
-      role: UserRole.USER,
-      img_path: '',
-      name: 'John Doe',
-      id: 'user_id',
-      email: 'some@mail.com',
-    };
+    const testUser = { ...userStub };
 
     authServiceSpy.getAuthHeader.and.returnValue(token);
     apiService.currentUserRequest().subscribe((user) => {
@@ -103,7 +99,10 @@ describe('InterceptorService', () => {
     const req = httpMock.expectOne(endpoints.CURRENT_USER);
     respondUnauthorized(req);
 
-    expect(dispatchSpy).toHaveBeenCalledOnceWith(authActions.refresh());
+    expect(dispatchSpy).toHaveBeenCalledOnceWith(
+      authActions.refresh(),
+      'refresh action has not been dispatched',
+    );
 
     authServiceSpy.getAuthHeader.and.returnValue(refreshedToken);
     refreshSubj$.next();
@@ -153,20 +152,7 @@ describe('InterceptorService integration tests', () => {
   let localStorageService: LocalStorageService;
 
   beforeEach(() => {
-    let token = 'default';
-    localStorageService = {
-      getAccessToken(): string {
-        return token;
-      },
-
-      setAccessToken(newToken: string): void {
-        token = newToken;
-      },
-
-      deleteAccessToken(): void {
-        token = '';
-      },
-    };
+    localStorageService = getLocalStorageServiceStub();
 
     TestBed.configureTestingModule({
       imports: [
@@ -219,13 +205,7 @@ describe('InterceptorService integration tests', () => {
     expect(refreshReq.request).toBeTruthy();
     const authResponse: AuthResponse = {
       data: {
-        user: {
-          role: UserRole.USER,
-          img_path: '',
-          name: 'John Doe',
-          id: 'user_id',
-          email: 'some@mail.com',
-        },
+        user: { ...userStub },
       },
       token: refreshedToken,
     };
