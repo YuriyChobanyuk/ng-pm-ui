@@ -1,10 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IUser } from 'src/app/interfaces';
 import { DEFAULT_AVATAR_PATH, locations } from '../../../shared/constants';
 
@@ -16,9 +10,9 @@ import { DEFAULT_AVATAR_PATH, locations } from '../../../shared/constants';
 export class AuthControlComponent implements OnInit {
   constructor() {}
 
-  @Input() isAuthPage!: boolean;
-  @Input() user!: IUser | null;
-  @Input() userLoading!: boolean;
+  @Input() isAuthPage: boolean | null = false;
+  @Input() user: IUser | null = null;
+  @Input() userLoading: boolean | null = false;
 
   @Output() logout: EventEmitter<void> = new EventEmitter<void>();
 

@@ -3,26 +3,15 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AuthControlComponent } from './auth-control.component';
 import { userStub } from '../../../shared/helpers/stubs';
 import { NgbDropdown, NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { By } from '@angular/platform-browser';
 import { DEFAULT_AVATAR_PATH, locations } from '../../../shared/constants';
-import { IUser } from 'src/app/interfaces';
 import { RouterLinkStubDirective } from '../../../shared/directives/stubs/router-link-stub.directive';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { AuthControlPage } from './utils';
 
 describe('AuthControlComponent', () => {
   let component: AuthControlComponent;
   let fixture: ComponentFixture<AuthControlComponent>;
-  let host: HTMLElement;
-
-  const setInput = (input: {
-    user?: IUser | null;
-    isAuthPage?: boolean;
-    userLoading?: boolean;
-  }) => {
-    component.isAuthPage = input.isAuthPage ?? false;
-    component.user = input.user ? { ...input.user } : null;
-    component.userLoading = input.userLoading ?? false;
-  };
+  let page: AuthControlPage<AuthControlComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -35,39 +24,37 @@ describe('AuthControlComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AuthControlComponent);
     component = fixture.componentInstance;
-    host = fixture.debugElement.nativeElement;
+    page = new AuthControlPage<AuthControlComponent>(fixture);
+
     fixture.detectChanges();
   });
 
   it('should render auth control when user is not loading', () => {
-    setInput({ user: userStub });
+    page.setInput({ user: userStub });
     fixture.detectChanges();
 
-    const authControl = host.querySelector('.auth-control');
+    const authControl = page.queryEl('.auth-control');
 
     expect(authControl).toBeTruthy();
   });
 
   it('should render spinner when loading', () => {
-    setInput({ userLoading: true });
+    page.setInput({ userLoading: true });
     fixture.detectChanges();
 
-    const spinnerContainer = host.querySelector<HTMLElement>(
-      '.auth-control-spinner',
-    );
-    const spinner = host.querySelector<HTMLElement>('[role="status"]');
+    const spinnerContainer = page.queryEl('.auth-control-spinner');
+    const spinner = page.queryEl('[role="status"]');
 
     expect(spinnerContainer?.innerText).toBe('Loading...');
     expect(spinner).toBeTruthy();
   });
 
   it('avatar click should trigger #toggle', () => {
-    setInput({ user: userStub });
+    page.setInput({ user: userStub });
     fixture.detectChanges();
 
-    const avatar = host.querySelector('.avatar-img');
-    const dropdownHost = fixture.debugElement.query(By.directive(NgbDropdown));
-    const userMenuDrop = dropdownHost.injector.get(NgbDropdown);
+    const avatar = page.queryEl('.avatar-img');
+    const [userMenuDrop] = page.directive(NgbDropdown);
     const toggleSpy = spyOn(userMenuDrop, 'toggle');
 
     avatar?.dispatchEvent(new Event('click'));
@@ -80,10 +67,10 @@ describe('AuthControlComponent', () => {
   });
 
   it('avatar should receive valid image source', () => {
-    setInput({ user: userStub });
+    page.setInput({ user: userStub });
     fixture.detectChanges();
 
-    const avatar = host.querySelector<HTMLImageElement>('.avatar-img');
+    const avatar = page.queryEl<HTMLImageElement>('.avatar-img');
 
     expect(avatar?.src?.endsWith(DEFAULT_AVATAR_PATH)).toBeTrue();
 
@@ -96,47 +83,54 @@ describe('AuthControlComponent', () => {
 
   describe('login link', () => {
     it('should be shown', () => {
-      setInput({});
+      page.setInput({});
       fixture.detectChanges();
 
-      const loginLink = host.querySelector<HTMLLinkElement>(
-        '[aria-label="login link"]',
-      );
+      const loginLink = page.queryEl<HTMLLinkElement>('[title="Login"]');
 
       expect(loginLink?.textContent).toBe('Login');
     });
 
     it('should be hidden on auth page or when authenticated', () => {
-      setInput({ isAuthPage: true });
+      page.setInput({ isAuthPage: true });
       fixture.detectChanges();
 
-      const loginLink = host.querySelector<HTMLLinkElement>(
-        '[aria-label="login link"]',
-      );
+      const loginLink = page.queryEl<HTMLLinkElement>('[title="Login"]');
 
       expect(loginLink).toBeFalsy();
-      setInput({ user: userStub });
+      page.setInput({ user: userStub });
       fixture.detectChanges();
 
       expect(loginLink).toBeFalsy();
     });
 
     it('should navigate on click', () => {
-      setInput({});
+      page.setInput({});
       fixture.detectChanges();
 
-      const loginLink = fixture.debugElement.query(
-        By.directive(RouterLinkStubDirective),
+      const [routerLinkStub, loginLink] = page.directive(
+        RouterLinkStubDirective,
       );
-      const routerLinkStub = loginLink.injector.get(RouterLinkStubDirective);
 
       expect(routerLinkStub.linkParams).toBe(locations.AUTH);
       expect(routerLinkStub.navigatedTo).toBeNull();
 
-      loginLink.triggerEventHandler('click', null);
+      loginLink.dispatchEvent(new MouseEvent('click'));
       fixture.detectChanges();
 
       expect(routerLinkStub.navigatedTo).toBe(locations.AUTH);
     });
+  });
+
+  it('should emit (logout) on user menu (click)', () => {
+    page.setInput({ user: userStub });
+    fixture.detectChanges();
+
+    const logoutSpy = spyOn(component.logout, 'emit');
+    const logoutButton = page.button('logout');
+    logoutButton?.dispatchEvent(new MouseEvent('click'));
+    fixture.detectChanges();
+
+    expect(logoutSpy).toHaveBeenCalled();
   });
 });
