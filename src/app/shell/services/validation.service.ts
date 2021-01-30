@@ -7,21 +7,42 @@ import { AbstractControl, ValidationErrors } from '@angular/forms';
 export class ValidationService {
   constructor() {}
 
-  getMinLengthMessage(errors?: ValidationErrors | null): string | null {
-    return errors
-      ? `Minimal length is ${errors.minlength.requiredLength}`
-      : null;
+  getUnknownErrorMessage(): string {
+    return 'Unknown error';
   }
 
-  getMaxLengthMessage(errors?: ValidationErrors | null): string | null {
-    return errors
-      ? `Maximal length is ${errors.maxlength.requiredLength}`
-      : null;
+  getRequiredErrorMessage(fieldName: string): string {
+    return `${fieldName} is required`;
+  }
+
+  getMinLengthMessage(errors: ValidationErrors): string {
+    const requiredLength = this.getRequiredLength(errors, 'minlength');
+    return `Minimal length is ${requiredLength}`;
+  }
+
+  getMaxLengthMessage(errors: ValidationErrors): string {
+    const requiredLength = this.getRequiredLength(errors, 'minlength');
+    return `Maximal length is ${requiredLength}`;
   }
 
   getFieldInvalid(control: AbstractControl | null): boolean {
     return control
       ? (control.touched || control.dirty) && !control.valid
       : false;
+  }
+
+  getInvalidEmailErrorMessage(): string {
+    return 'Should be a valid email';
+  }
+
+  getPasswordPatternErrorMessage(): string {
+    return 'At least one uppercase, one lowercase, one digit and one symbol';
+  }
+
+  private getRequiredLength(
+    errors: ValidationErrors,
+    key: 'minlength' | 'maxlength',
+  ): number {
+    return errors[key]?.requiredLength as number;
   }
 }

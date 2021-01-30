@@ -1,13 +1,14 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { endpoints } from '../../shared/constants';
 import { Observable } from 'rxjs';
+
 import {
   AuthResponse,
   IUser,
   LoginCredentials,
   SignUpCredentials,
 } from '../../interfaces';
-import { HttpClient } from '@angular/common/http';
+import { endpoints } from '../../shared/constants';
 
 @Injectable({
   providedIn: 'root',

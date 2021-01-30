@@ -1,18 +1,16 @@
 import { LocalStorageService } from '../local-storage.service';
 
-export function getLocalStorageServiceStub(): LocalStorageService {
+export const getLocalStorageServiceStub = (): LocalStorageService => {
   let token = 'default';
   return {
-    getAccessToken(): string {
-      return token;
-    },
+    getAccessToken: (): string => {return token; },
 
-    setAccessToken(newToken: string): void {
+    setAccessToken: (newToken: string): void => {
       token = newToken;
     },
 
-    deleteAccessToken(): void {
+    deleteAccessToken: (): void => {
       token = '';
     },
   };
-}
+};

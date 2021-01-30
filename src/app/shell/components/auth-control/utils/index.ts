@@ -1,5 +1,6 @@
 import { ComponentFixture } from '@angular/core/testing';
 import { IUser } from 'src/app/interfaces';
+
 import { BasePage } from '../../../../shared/helpers/page.helper';
 
 interface Input {

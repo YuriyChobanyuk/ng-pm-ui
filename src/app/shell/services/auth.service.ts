@@ -1,22 +1,23 @@
 import { Injectable } from '@angular/core';
-import { LocalStorageService } from './local-storage.service';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { logout } from '../store/auth/actions';
-import { BEARER, locations } from '../../shared/constants';
 import { Subject } from 'rxjs';
+
+import { BEARER, locations } from '../../shared/constants';
+import { logout } from '../store/auth/actions';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  tokenRefreshed$ = new Subject();
+
   constructor(
     private localStorageService: LocalStorageService,
     private router: Router,
     private store: Store,
   ) {}
-
-  tokenRefreshed$ = new Subject();
 
   get accessToken(): string {
     return this.localStorageService.getAccessToken();
@@ -35,7 +36,9 @@ export class AuthService {
   }
 
   redirectToLoginPage(): void {
-    this.router.navigateByUrl(locations.AUTH);
+    this.router.navigateByUrl(locations.AUTH).catch((e) => {
+      console.error(e);
+    });
   }
 
   logout(): void {

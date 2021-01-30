@@ -1,40 +1,35 @@
-import { TestBed } from '@angular/core/testing';
-
-import { InterceptorService } from './interceptor.service';
+import { HTTP_INTERCEPTORS, HttpErrorResponse } from '@angular/common/http';
 import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
-import {
-  HTTP_INTERCEPTORS,
-  HttpErrorResponse,
-  HttpInterceptor,
-} from '@angular/common/http';
-import { AuthService } from './auth.service';
+import { TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { ApiService } from './api.service';
-import { BEARER, endpoints } from '../../shared/constants';
+import { Subject } from 'rxjs';
+
 import { AuthResponse } from '../../interfaces';
+import { BEARER, endpoints } from '../../shared/constants';
+import { respondUnauthorized } from '../../shared/helpers/http.helpers';
+import { userStub } from '../../shared/helpers/stubs';
 import {
   authActions,
   AuthEffects,
   authReducer,
   authSelectors,
-  AuthState,
 } from '../store/auth';
-import { Subject } from 'rxjs';
-import { respondUnauthorized } from '../../shared/helpers/http.helpers';
-import { Store, StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ApiService } from './api.service';
+import { AuthService } from './auth.service';
+import { InterceptorService } from './interceptor.service';
 import { LocalStorageService } from './local-storage.service';
-import { userStub } from '../../shared/helpers/stubs';
 import { getLocalStorageServiceStub } from './test-utils';
 
 describe('InterceptorService', () => {
   type AuthServiceSpy = jasmine.SpyObj<AuthService>;
 
-  let service: InterceptorService;
+  // let service: InterceptorService;
   let httpMock: HttpTestingController;
   let mockStore: MockStore;
   let authServiceSpy: AuthServiceSpy;
@@ -59,11 +54,9 @@ describe('InterceptorService', () => {
         },
       ],
     });
-    service = TestBed.inject(HTTP_INTERCEPTORS).find(
-      (interceptor: HttpInterceptor) => {
-        return interceptor instanceof InterceptorService;
-      },
-    ) as InterceptorService;
+    // service = TestBed.inject(HTTP_INTERCEPTORS).find(
+    //   (interceptor: HttpInterceptor) => interceptor instanceof InterceptorService,
+    // ) as InterceptorService;
     httpMock = TestBed.inject(HttpTestingController);
     mockStore = TestBed.inject(MockStore);
     apiService = TestBed.inject(ApiService);
@@ -144,11 +137,11 @@ describe('InterceptorService', () => {
 });
 
 describe('InterceptorService integration tests', () => {
-  let service: InterceptorService;
+  // let service: InterceptorService;
   let httpMock: HttpTestingController;
   let apiService: ApiService;
-  let store: Store<{ auth: AuthState }>;
-  let authService: AuthService;
+  // let store: Store<{ auth: AuthState }>;
+  // let authService: AuthService;
   let localStorageService: LocalStorageService;
 
   beforeEach(() => {
@@ -177,15 +170,13 @@ describe('InterceptorService integration tests', () => {
         },
       ],
     });
-    service = TestBed.inject(HTTP_INTERCEPTORS).find(
-      (interceptor: HttpInterceptor) => {
-        return interceptor instanceof InterceptorService;
-      },
-    ) as InterceptorService;
+    // service = TestBed.inject(HTTP_INTERCEPTORS).find(
+    //   (interceptor: HttpInterceptor) => interceptor instanceof InterceptorService,
+    // ) as InterceptorService;
     httpMock = TestBed.inject(HttpTestingController);
-    store = TestBed.inject(Store);
+    // store = TestBed.inject(Store);
     apiService = TestBed.inject(ApiService);
-    authService = TestBed.inject(AuthService);
+    // authService = TestBed.inject(AuthService);
   });
 
   afterEach(() => {

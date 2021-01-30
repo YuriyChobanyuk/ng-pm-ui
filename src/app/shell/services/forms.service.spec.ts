@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-
-import { FormsService } from './forms.service';
-import { LoginFormFields } from '../../interfaces';
 import { ReactiveFormsModule } from '@angular/forms';
+
+import { LoginFormFields } from '../../interfaces';
+import { FormsService } from './forms.service';
 
 describe('FormsService', () => {
   let service: FormsService;

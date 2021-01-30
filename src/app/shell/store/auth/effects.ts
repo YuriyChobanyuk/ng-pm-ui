@@ -1,5 +1,23 @@
-import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { StatusCodes } from 'http-status-codes';
+import { of } from 'rxjs';
+import {
+  catchError,
+  exhaustMap,
+  finalize,
+  map,
+  mergeMap,
+  takeUntil,
+  tap,
+} from 'rxjs/operators';
+
+import { UserRole } from '../../../interfaces';
+import { locations } from '../../../shared/constants';
+import { ApiService } from '../../services/api.service';
+import { AuthService } from '../../services/auth.service';
 import {
   getCurrentUser,
   getCurrentUserError,
@@ -15,88 +33,68 @@ import {
   signUpError,
   signUpSuccess,
 } from './actions';
-import {
-  catchError,
-  exhaustMap,
-  finalize,
-  map,
-  mergeMap,
-  takeUntil,
-  tap,
-} from 'rxjs/operators';
-import {
-  LoginCredentials,
-  SignUpCredentials,
-  UserRole,
-} from '../../../interfaces';
-import { of } from 'rxjs';
-import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
-import { locations } from '../../../shared/constants';
-import { ApiService } from '../../services/api.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { StatusCodes } from 'http-status-codes';
 
 @Injectable()
 export class AuthEffects {
-  constructor(
-    private actions$: Actions,
-    private authService: AuthService,
-    private router: Router,
-    private api: ApiService,
-  ) {}
-
-  login$ = createEffect(() =>
-    this.actions$.pipe(
+  login$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(login),
-      mergeMap(({ credentials }: { credentials: LoginCredentials }) =>
-        this.api.loginRequest(credentials).pipe(
+      mergeMap(({ credentials }) => {
+        return this.api.loginRequest(credentials).pipe(
           map(({ token, data: { user } }) => {
             this.authService.accessToken = token;
             return loginSuccess({ user });
           }),
           takeUntil(this.actions$.pipe(ofType(logout))),
-          catchError(() => of(loginError())),
-        ),
-      ),
-    ),
-  );
+          catchError(() => {
+            return of(loginError());
+          }),
+        );
+      }),
+    );
+  });
 
-  signUp$ = createEffect(() =>
-    this.actions$.pipe(
+  signUp$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(signUp),
-      mergeMap(({ credentials }: { credentials: SignUpCredentials }) =>
-        this.api.signUpRequest(credentials).pipe(
+      mergeMap(({ credentials }) => {
+        return this.api.signUpRequest(credentials).pipe(
           map(({ token, data: { user } }) => {
             this.authService.accessToken = token;
             return signUpSuccess({ user });
           }),
           takeUntil(this.actions$.pipe(ofType(logout))),
-          catchError(() => of(signUpError())),
-        ),
-      ),
-    ),
-  );
+          catchError(() => {
+            return of(signUpError());
+          }),
+        );
+      }),
+    );
+  });
 
-  getCurrentUser$ = createEffect(() =>
-    this.actions$.pipe(
+  getCurrentUser$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(getCurrentUser),
-      mergeMap(() =>
-        this.api.currentUserRequest().pipe(
-          map((user) => getCurrentUserSuccess({ user })),
+      mergeMap(() => {
+        return this.api.currentUserRequest().pipe(
+          map((user) => {
+            return getCurrentUserSuccess({ user });
+          }),
           takeUntil(this.actions$.pipe(ofType(logout))),
-          catchError(() => of(getCurrentUserError())),
-        ),
-      ),
-    ),
-  );
+          catchError(() => {
+            return of(getCurrentUserError());
+          }),
+        );
+      }),
+    );
+  });
 
-  refresh$ = createEffect(() =>
-    this.actions$.pipe(
+  refresh$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(refresh),
-      exhaustMap(() =>
-        this.api.refreshRequest().pipe(
-          map(({ data: { user }, token }) => {
+      exhaustMap(() => {
+        return this.api.refreshRequest().pipe(
+          map(({ token }) => {
             this.authService.accessToken = token;
             return refreshSuccess();
           }),
@@ -110,28 +108,40 @@ export class AuthEffects {
           finalize(() => {
             this.authService.tokenRefreshed$.next();
           }),
-        ),
-      ),
-    ),
-  );
+        );
+      }),
+    );
+  });
 
   successRedirect$ = createEffect(
-    () =>
-      this.actions$.pipe(
+    () => {
+      return this.actions$.pipe(
         ofType(loginSuccess, signUpSuccess),
         tap(({ user }) => {
           switch (user.role) {
             case UserRole.ADMIN: {
-              this.router.navigate([locations.ADMIN]);
+              this.router.navigate([locations.ADMIN]).catch((e) => {
+                console.error(e);
+              });
               break;
             }
             case UserRole.USER: {
-              this.router.navigate([locations.USER]);
+              this.router.navigate([locations.USER]).catch((e) => {
+                console.error(e);
+              });
               break;
             }
           }
         }),
-      ),
+      );
+    },
     { dispatch: false },
   );
+
+  constructor(
+    private actions$: Actions,
+    private authService: AuthService,
+    private router: Router,
+    private api: ApiService,
+  ) {}
 }

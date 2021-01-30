@@ -1,13 +1,13 @@
-import { TestBed } from '@angular/core/testing';
-
-import { ApiService } from './api.service';
-import { AuthResponse, LoginCredentials, UserRole } from '../../interfaces';
-import { endpoints } from '../../shared/constants';
 import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+
+import { AuthResponse, LoginCredentials } from '../../interfaces';
+import { endpoints } from '../../shared/constants';
 import { userStub } from '../../shared/helpers/stubs';
+import { ApiService } from './api.service';
 
 describe('ApiService', () => {
   let service: ApiService;

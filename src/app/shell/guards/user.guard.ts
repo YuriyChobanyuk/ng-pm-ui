@@ -1,15 +1,11 @@
 import { Injectable } from '@angular/core';
-import {
-  CanActivate,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-  UrlTree,
-} from '@angular/router';
-import { Observable } from 'rxjs';
+import { CanActivate, UrlTree } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { authSelectors } from '../store/auth';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
 import { UserRole } from '../../interfaces';
+import { authSelectors } from '../store/auth';
 import { AppState } from '../store/rootState';
 
 @Injectable({
@@ -17,10 +13,8 @@ import { AppState } from '../store/rootState';
 })
 export class UserGuard implements CanActivate {
   constructor(private store: Store<AppState>) {}
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot,
-  ):
+
+  canActivate():
     | Observable<boolean | UrlTree>
     | Promise<boolean | UrlTree>
     | boolean

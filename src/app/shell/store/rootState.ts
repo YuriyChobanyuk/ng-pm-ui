@@ -1,5 +1,6 @@
-import { authReducer, AuthState, AuthEffects } from './auth';
 import { routerReducer, RouterReducerState } from '@ngrx/router-store';
+
+import { AuthEffects, authReducer, AuthState } from './auth';
 
 export const reducers = {
   auth: authReducer,

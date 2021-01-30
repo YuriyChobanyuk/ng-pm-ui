@@ -1,6 +1,6 @@
+import { DebugElement, Type } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { DebugElement, Type } from '@angular/core';
 
 export class BasePage<T> {
   component: T;
@@ -24,7 +24,9 @@ export class BasePage<T> {
   }
 
   queryElAll<E = HTMLElement>(selector: string): E[] | [] {
-    return this.queryDeAll(selector).map((db) => db.nativeElement);
+    return this.queryDeAll(selector).map((db) => {
+      return db.nativeElement;
+    });
   }
 
   button(name: string, extraSelectors: string = ''): HTMLButtonElement | null {

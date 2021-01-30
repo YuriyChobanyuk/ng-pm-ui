@@ -1,12 +1,12 @@
-import { TestBed } from '@angular/core/testing';
-
-import { AuthService } from './auth.service';
-import { ApiService } from './api.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { LocalStorageService } from './local-storage.service';
-import { logout } from '../store/auth/actions';
 import { Store } from '@ngrx/store';
+
+import { logout } from '../store/auth/actions';
+import { ApiService } from './api.service';
+import { AuthService } from './auth.service';
+import { LocalStorageService } from './local-storage.service';
 
 describe('AuthService', () => {
   let service: AuthService;

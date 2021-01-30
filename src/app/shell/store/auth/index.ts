@@ -1,5 +1,6 @@
-import * as selectors from './selectors';
 import * as actions from './actions';
+import * as selectors from './selectors';
+
 export * from './reducer';
 export * from './effects';
 export const authSelectors = selectors;

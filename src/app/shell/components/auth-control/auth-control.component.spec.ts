@@ -1,11 +1,11 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { AuthControlComponent } from './auth-control.component';
-import { userStub } from '../../../shared/helpers/stubs';
 import { NgbDropdown, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 import { DEFAULT_AVATAR_PATH, locations } from '../../../shared/constants';
 import { RouterLinkStubDirective } from '../../../shared/directives/stubs/router-link-stub.directive';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { userStub } from '../../../shared/helpers/stubs';
+import { AuthControlComponent } from './auth-control.component';
 import { AuthControlPage } from './utils';
 
 describe('AuthControlComponent', () => {
@@ -75,6 +75,7 @@ describe('AuthControlComponent', () => {
     expect(avatar?.src?.endsWith(DEFAULT_AVATAR_PATH)).toBeTrue();
 
     const updatedPath = 'updated_path';
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     component.user = { ...userStub, img_path: updatedPath };
     fixture.detectChanges();
 

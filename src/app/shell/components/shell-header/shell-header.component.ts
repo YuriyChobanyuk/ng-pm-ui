@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+
 import { NavigationListItem } from '../../../interfaces';
 
 @Component({
@@ -7,8 +8,6 @@ import { NavigationListItem } from '../../../interfaces';
   styleUrls: ['./shell-header.component.scss'],
 })
 export class ShellHeaderComponent implements OnInit {
-  constructor() {}
-
   navigationList: NavigationListItem[] = [];
 
   ngOnInit(): void {}

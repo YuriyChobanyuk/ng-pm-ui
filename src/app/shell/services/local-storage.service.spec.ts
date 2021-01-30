@@ -1,8 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
-import { LocalStorageService } from './local-storage.service';
-import Spy = jasmine.Spy;
 import { ACCESS_TOKEN_KEY } from '../../shared/constants';
+import { LocalStorageService } from './local-storage.service';
 
 describe('LocalStorageService', () => {
   let service: LocalStorageService;

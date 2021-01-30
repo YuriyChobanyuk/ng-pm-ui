@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import {
-  CanActivate,
   ActivatedRouteSnapshot,
+  CanActivate,
   RouterStateSnapshot,
   UrlTree,
 } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { AppState } from '../store/rootState';
-import { authSelectors } from '../store/auth';
 import { map } from 'rxjs/operators';
+
 import { UserRole } from '../../interfaces';
+import { authSelectors } from '../store/auth';
+import { AppState } from '../store/rootState';
 
 @Injectable({
   providedIn: 'root',

@@ -1,18 +1,19 @@
-import { Injectable } from '@angular/core';
 import {
   HttpErrorResponse,
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
 } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { select, Store } from '@ngrx/store';
+import { StatusCodes } from 'http-status-codes';
 import { Observable, throwError } from 'rxjs';
 import { catchError, switchMap, take, tap } from 'rxjs/operators';
-import { AuthService } from './auth.service';
-import { StatusCodes } from 'http-status-codes';
+
 import { endpoints } from '../../shared/constants';
-import { select, Store } from '@ngrx/store';
-import { AppState } from '../store/rootState';
 import { authActions, authSelectors } from '../store/auth';
+import { AppState } from '../store/rootState';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class InterceptorService implements HttpInterceptor {
@@ -21,12 +22,22 @@ export class InterceptorService implements HttpInterceptor {
     private store: Store<AppState>,
   ) {}
 
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<any> {
+    request = this.addAuthHeader(request);
+
+    return next.handle(request).pipe(
+      catchError((error) => {
+        return this.handleResponseError(error, request, next);
+      }),
+    );
+  }
+
   private addAuthHeader(request: HttpRequest<any>): HttpRequest<any> {
     const authHeader = this.authService.getAuthHeader();
     return authHeader
       ? request.clone({
           setHeaders: {
-            Authorization: authHeader,
+            authorization: authHeader,
           },
         })
       : request;
@@ -50,7 +61,9 @@ export class InterceptorService implements HttpInterceptor {
           this.store.dispatch(authActions.refresh());
         }
       }),
-      switchMap(() => this.dumpRefresh()),
+      switchMap(() => {
+        return this.dumpRefresh();
+      }),
     );
   }
 
@@ -94,15 +107,5 @@ export class InterceptorService implements HttpInterceptor {
       default:
         return throwError(error);
     }
-  }
-
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<any> {
-    request = this.addAuthHeader(request);
-
-    return next.handle(request).pipe(
-      catchError((error) => {
-        return this.handleResponseError(error, request, next);
-      }),
-    );
   }
 }

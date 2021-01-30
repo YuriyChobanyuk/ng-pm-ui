@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IUser } from 'src/app/interfaces';
+
 import { DEFAULT_AVATAR_PATH, locations } from '../../../shared/constants';
 
 @Component({
@@ -8,8 +9,6 @@ import { DEFAULT_AVATAR_PATH, locations } from '../../../shared/constants';
   styleUrls: ['./auth-control.component.scss'],
 })
 export class AuthControlComponent implements OnInit {
-  constructor() {}
-
   @Input() isAuthPage: boolean | null = false;
   @Input() user: IUser | null = null;
   @Input() userLoading: boolean | null = false;

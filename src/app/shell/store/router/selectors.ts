@@ -1,7 +1,8 @@
 import * as fromRouter from '@ngrx/router-store';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { AppState } from '../rootState';
+
 import { locations } from '../../../shared/constants';
+import { AppState } from '../rootState';
 
 export const selectRouter = createFeatureSelector<
   AppState,
