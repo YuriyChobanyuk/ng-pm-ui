@@ -92,10 +92,7 @@ describe('InterceptorService', () => {
     const req = httpMock.expectOne(endpoints.CURRENT_USER);
     respondUnauthorized(req);
 
-    expect(dispatchSpy).toHaveBeenCalledOnceWith(
-      authActions.refresh(),
-      'refresh action has not been dispatched',
-    );
+    expect(dispatchSpy).toHaveBeenCalledOnceWith(authActions.refresh());
 
     authServiceSpy.getAuthHeader.and.returnValue(refreshedToken);
     refreshSubj$.next();

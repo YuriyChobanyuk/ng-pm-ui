@@ -9,11 +9,11 @@ export class BasePage<T> {
     this.component = this.fixture.componentInstance;
   }
 
-  queryEl<E = HTMLElement>(selector: string): E | null {
-    return this.queryDe(selector).nativeElement;
+  queryEl<E = HTMLElement>(selector: string): E | undefined {
+    return this.queryDe(selector)?.nativeElement;
   }
 
-  queryDe(selector?: string): DebugElement {
+  queryDe(selector?: string): DebugElement | null {
     return selector
       ? this.fixture.debugElement.query(By.css(selector))
       : this.fixture.debugElement;
@@ -29,12 +29,12 @@ export class BasePage<T> {
     });
   }
 
-  button(name: string, extraSelectors: string = ''): HTMLButtonElement | null {
+  button(name: string, extraSelectors: string = ''): HTMLButtonElement | undefined {
     const selector = `button[name="${name}"]${extraSelectors}`;
     return this.queryEl<HTMLButtonElement>(selector);
   }
 
-  input(id: string, extraSelectors: string = ''): HTMLInputElement | null {
+  input(id: string, extraSelectors: string = ''): HTMLInputElement | undefined {
     const selector = `input#${id}${extraSelectors}`;
     return this.queryEl<HTMLInputElement>(selector);
   }
