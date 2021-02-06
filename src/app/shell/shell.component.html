@@ -2,9 +2,9 @@
   <app-shell-header>
     <app-auth-control
       class="user-control"
-      [isAuthPage]="isAuthPage$ | async"
-      [user]="user$ | async"
-      [userLoading]="userLoading$ | async"
+      [isAuthPage]="isAuthPage$ | ngrxPush"
+      [user]="user$ | ngrxPush"
+      [userLoading]="userLoading$ | ngrxPush"
       (logout)="handleLogout()"
     >
     </app-auth-control>

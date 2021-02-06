@@ -293,12 +293,17 @@ module.exports = {
       overrides: [
         {
           files: ['*.spec.ts'],
+          // Правила для линтера
+          extends: ['plugin:jasmine/recommended'],
+          // Плагин для запуска правил
+          plugins: ['jasmine'],
           parserOptions: {
             ecmaVersion: 2020,
             sourceType: 'module',
             project: ['tsconfig.spec.json'],
           },
           rules: {
+            '@typescript-eslint/no-unused-vars': 'off',
             '@typescript-eslint/no-unsafe-call': 'off',
             '@typescript-eslint/no-unsafe-assignmentall': 'off',
             '@typescript-eslint/no-unsafe-assignment': 'off',
@@ -309,7 +314,10 @@ module.exports = {
     {
       files: ['*.html'],
       parser: '@angular-eslint/template-parser',
-      plugins: ['@angular-eslint/template'],
+      plugins: [
+        '@angular-eslint/template',
+        '@angular-eslint/eslint-plugin-template',
+      ],
       extends: ['plugin:@angular-eslint/template/recommended'],
       rules: {},
     },

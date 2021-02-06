@@ -9,9 +9,9 @@ import { DEFAULT_AVATAR_PATH, locations } from '../../../shared/constants';
   styleUrls: ['./auth-control.component.scss'],
 })
 export class AuthControlComponent implements OnInit {
-  @Input() isAuthPage: boolean | null = false;
+  @Input() isAuthPage = false;
   @Input() user: IUser | null = null;
-  @Input() userLoading: boolean | null = false;
+  @Input() userLoading = false;
 
   @Output() logout: EventEmitter<void> = new EventEmitter<void>();
 
