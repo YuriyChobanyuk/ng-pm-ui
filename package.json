@@ -8,8 +8,8 @@
     "test": "ng test",
     "lint": "eslint --ext .ts,.html .",
     "lint:fix": "eslint --ext .ts,.html . --fix",
-    "format:lint": "prettier . --check",
-    "format:fix": "prettier . --write",
+    "format:lint": "prettier . --check -u",
+    "format:fix": "prettier . --write -u",
     "e2e": "ng e2e"
   },
   "husky": {
