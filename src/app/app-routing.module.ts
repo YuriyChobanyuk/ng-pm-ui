@@ -18,13 +18,20 @@ const routes: Routes = [
   },
   {
     path: locations.ADMIN,
-    loadChildren: () =>
-      {return import('./admin/admin.module').then((m) => {return m.AdminModule; }); },
+    loadChildren: () => {
+      return import('./admin/admin.module').then((m) => {
+        return m.AdminModule;
+      });
+    },
     canActivate: [AdminGuard],
   },
   {
     path: locations.USER,
-    loadChildren: () => {return import('./user/user.module').then((m) => {return m.UserModule; }); },
+    loadChildren: () => {
+      return import('./user/user.module').then((m) => {
+        return m.UserModule;
+      });
+    },
     canActivate: [UserGuard],
   },
 ];

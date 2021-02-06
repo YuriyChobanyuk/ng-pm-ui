@@ -1,5 +1,4 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 
 import { LoginCredentials, LoginFormFields } from '../../../../interfaces';
 import { FormsService } from '../../../services/forms.service';
@@ -17,7 +16,7 @@ export class LoginComponent implements OnInit {
   @Output()
   submitLogin: EventEmitter<LoginCredentials> = new EventEmitter<LoginCredentials>();
 
-  form!: FormGroup;
+  form = this.formsService.getLoginForm();
   fields = LoginFormFields;
   email = new EmailField(this.form, this.validationService, this.fields.EMAIL);
   password = new LoginPasswordField(
@@ -31,9 +30,7 @@ export class LoginComponent implements OnInit {
     private validationService: ValidationService,
   ) {}
 
-  ngOnInit(): void {
-    this.form = this.formsService.getLoginForm();
-  }
+  ngOnInit(): void {}
 
   handleToggleLogin(): void {
     this.toggleLogin.emit();

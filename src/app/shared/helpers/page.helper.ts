@@ -3,7 +3,7 @@ import { ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 export class BasePage<T> {
-  component: T;
+  private component: T;
 
   constructor(protected fixture: ComponentFixture<T>) {
     this.component = this.fixture.componentInstance;

@@ -1,0 +1,15 @@
+{
+  "shell": {
+    "header": "Personal manager!",
+    "fields": {
+      "email": "Email"
+    }
+  },
+  "common": {
+    "validation": {
+      "required": "{{fieldName}} is required.",
+      "email": "Should be a valid email.",
+      "unknown": ""
+    }
+  }
+}
