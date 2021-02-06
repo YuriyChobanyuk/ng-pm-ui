@@ -29,7 +29,10 @@ export class BasePage<T> {
     });
   }
 
-  button(name: string, extraSelectors: string = ''): HTMLButtonElement | undefined {
+  button(
+    name: string,
+    extraSelectors: string = '',
+  ): HTMLButtonElement | undefined {
     const selector = `button[name="${name}"]${extraSelectors}`;
     return this.queryEl<HTMLButtonElement>(selector);
   }

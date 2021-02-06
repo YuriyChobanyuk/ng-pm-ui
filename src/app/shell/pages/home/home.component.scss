@@ -5,7 +5,7 @@
   position: relative;
   display: block;
   height: calc(100vh - #{$top-nav-height});
-  background: linear-gradient(rgba($gray-900, .5), rgba($gray-600, .3)),
+  background: linear-gradient(rgba($gray-900, 0.5), rgba($gray-600, 0.3)),
     url('~src/assets/images/man_and_city.jpg');
   background-size: cover;
   filter: brightness(0.8) contrast(190%);

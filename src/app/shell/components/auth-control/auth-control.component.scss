@@ -1,11 +1,11 @@
-@import "src/styles/bootstrap-vars";
+@import 'src/styles/bootstrap-vars';
 
 .avatar-img {
   max-width: 2.5rem;
   cursor: pointer;
 
   &:focus {
-    box-shadow: 0 0  3px 2px $primary;
+    box-shadow: 0 0 3px 2px $primary;
     outline: none;
   }
 }
