@@ -5,7 +5,7 @@
       role="status"
       aria-hidden="true"
     ></span
-    >Loading...
+    ><span class="ml-2" translate>shell.loading</span>
   </button>
 </div>
 
@@ -15,8 +15,9 @@
       *ngIf="!isAuthPage && !isAuthenticated"
       class="btn btn-outline-light text-capitalize text-nowrap"
       [routerLink]="authPath"
-      title="Login"
-      ><i class="bi bi-box-arrow-in-right mr-2"> </i>Login</a
+      [title]="'shell.buttons.login' | translate"
+      ><i class="bi bi-box-arrow-in-right mr-2"> </i
+      ><span translate>shell.buttons.login</span></a
     >
 
     <div *ngIf="isAuthenticated" class="d-flex align-items-center text-white">
@@ -30,13 +31,15 @@
           class="btn btn-dark mr-2 user-menu-button"
           id="auth-control-button"
           ngbDropdownAnchor
+          [title]="'shell.buttons.userMenu' | translate"
           (focus)="userMenuDrop.open()"
         >
           {{ user?.name }}
         </button>
         <div ngbDropdownMenu aria-labelledby="auth-control-button">
           <button ngbDropdownItem>
-            <i class="bi bi-person-badge mr-2"></i>Profile
+            <i class="bi bi-person-badge mr-2"></i>
+            <span translate>shell.buttons.profile</span>
           </button>
           <button
             ngbDropdownItem
@@ -44,7 +47,8 @@
             name="logout"
             (click)="handleLogout()"
           >
-            <i class="bi bi-box-arrow-left mr-2"></i>Logout
+            <i class="bi bi-box-arrow-left mr-2"></i
+            ><span translate>shell.buttons.logout</span>
           </button>
         </div>
       </div>
@@ -54,8 +58,8 @@
         class="avatar-img rounded-circle"
         [src]="user?.img_path || defaultAvatarImg"
         alt="Avatar image"
+        [title]="'shell.buttons.userMenuToggle' | translate"
         (click)="userMenuDrop.toggle()"
-        (keydown.enter)="userMenuDrop.toggle()"
       />
     </div>
   </div>

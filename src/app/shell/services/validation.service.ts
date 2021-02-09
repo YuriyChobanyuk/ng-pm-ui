@@ -1,28 +1,43 @@
 import { Injectable } from '@angular/core';
 import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ValidationService {
-  constructor() {}
+  constructor(private translate: TranslateService) {}
 
-  getUnknownErrorMessage(): string {
-    return 'Unknown error';
+  getUnknownErrorMessage(): Observable<string> {
+    return this.translate.get('common.validation.unknown');
   }
 
-  getRequiredErrorMessage(fieldName: string): string {
-    return `${fieldName} is required`;
+  getRequiredErrorMessage(fieldName: string): Observable<string> {
+    return this.translate.get(fieldName).pipe(
+      switchMap((translatedFieldName: string) => {
+        return this.translate.get('common.validation.required', {
+          fieldName: translatedFieldName,
+        });
+      }),
+    );
   }
 
-  getMinLengthMessage(errors: ValidationErrors): string {
+  getMinLengthMessage(errors: ValidationErrors): Observable<string> {
     const requiredLength = this.getRequiredLength(errors, 'minlength');
-    return `Minimal length is ${requiredLength}`;
+
+    return this.translate.get('common.validation.minLength', {
+      requiredLength,
+    });
   }
 
-  getMaxLengthMessage(errors: ValidationErrors): string {
+  getMaxLengthMessage(errors: ValidationErrors): Observable<string> {
     const requiredLength = this.getRequiredLength(errors, 'minlength');
-    return `Maximal length is ${requiredLength}`;
+
+    return this.translate.get('common.validation.maxLength', {
+      requiredLength,
+    });
   }
 
   getFieldInvalid(control: AbstractControl | null): boolean {
@@ -31,12 +46,12 @@ export class ValidationService {
       : false;
   }
 
-  getInvalidEmailErrorMessage(): string {
-    return 'Should be a valid email';
+  getInvalidEmailErrorMessage(): Observable<string> {
+    return this.translate.get('common.validation.email');
   }
 
-  getPasswordPatternErrorMessage(): string {
-    return 'At least one uppercase, one lowercase, one digit and one symbol';
+  getPasswordPatternErrorMessage(): Observable<string> {
+    return this.translate.get('common.validation.userPasswordPattern');
   }
 
   private getRequiredLength(

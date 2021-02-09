@@ -1,15 +1,35 @@
 {
   "shell": {
-    "header": "Personal manager!",
+    "loading": "Loading...",
+    "personalManager": "Personal manager",
+    "loginFormTitle": "Login",
+    "signUpFormTitle": "Sign Up",
+    "noAccountQuestion": "Don't have account?",
+    "accountExistsQuestion": "Already have account?",
+    "buttons": {
+      "login": "Login",
+      "signUp": "Sign Up",
+      "userMenu": "Open user menu",
+      "userMenuToggle": "Toggle user menu",
+      "profile": "Profile",
+      "logout": "Logout"
+    },
     "fields": {
-      "email": "Email"
+      "email": "Email",
+      "name": "Name",
+      "password": "Password",
+      "namePlaceholder": "Enter your name"
     }
   },
   "common": {
+    "copyright": "© Personal Manager 2020",
     "validation": {
       "required": "{{fieldName}} is required.",
+      "minLength": "Minimal length is {{requiredLength}}.",
+      "maxLength": "Maximal length is {{requiredLength}}.",
       "email": "Should be a valid email.",
-      "unknown": ""
+      "unknown": "Unknown validation error",
+      "userPasswordPattern": "At least one uppercase, one lowercase, one digit and one symbol."
     }
   }
 }

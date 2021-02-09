@@ -1,4 +1,5 @@
 import { AbstractControl, FormGroup } from '@angular/forms';
+import { Observable } from 'rxjs';
 
 import { FormField } from '../../interfaces';
 import { ValidationService } from '../../shell/services/validation.service';
@@ -12,7 +13,7 @@ export abstract class BaseField implements FormField {
     return this.validationService.getFieldInvalid(this.control);
   }
 
-  abstract errors: string | null;
+  abstract errors: Observable<string> | null;
 
   protected constructor(
     protected form: FormGroup,
