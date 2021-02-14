@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { ValidationErrors } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -38,12 +38,6 @@ export class ValidationService {
     return this.translate.get('common.validation.maxLength', {
       requiredLength,
     });
-  }
-
-  getFieldInvalid(control: AbstractControl | null): boolean {
-    return control
-      ? (control.touched || control.dirty) && !control.valid
-      : false;
   }
 
   getInvalidEmailErrorMessage(): Observable<string> {

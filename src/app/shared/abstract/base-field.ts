@@ -5,12 +5,13 @@ import { FormField } from '../../interfaces';
 import { ValidationService } from '../../shell/services/validation.service';
 
 export abstract class BaseField implements FormField {
-  get control(): AbstractControl | null {
-    return this.form.get(this.fieldName);
-  }
+  control: AbstractControl | null;
+  controlName: string;
 
   get invalid(): boolean {
-    return this.validationService.getFieldInvalid(this.control);
+    return this.control
+      ? (this.control.touched || this.control.dirty) && !this.control.valid
+      : false;
   }
 
   abstract errors: Observable<string> | null;
@@ -19,5 +20,8 @@ export abstract class BaseField implements FormField {
     protected form: FormGroup,
     protected validationService: ValidationService,
     protected fieldName: string,
-  ) {}
+  ) {
+    this.control = this.form.get(this.fieldName);
+    this.controlName = this.fieldName;
+  }
 }

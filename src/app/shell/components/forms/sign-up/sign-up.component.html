@@ -6,7 +6,7 @@
       type="text"
       class="form-control"
       id="auth-sign-up-name"
-      [formControlName]="fields.NAME"
+      [formControlName]="name.controlName"
       [placeholder]="'shell.fields.namePlaceholder' | translate"
       [class.is-invalid]="name.invalid"
     />
@@ -20,7 +20,7 @@
       type="email"
       class="form-control"
       id="auth-sign-up-email"
-      [formControlName]="fields.EMAIL"
+      [formControlName]="email.controlName"
       placeholder="name@example.com"
       [class.is-invalid]="email.invalid"
     />
@@ -34,7 +34,7 @@
       type="password"
       class="form-control"
       id="auth-sign-up-password"
-      [formControlName]="fields.PASSWORD"
+      [formControlName]="password.controlName"
       [placeholder]="'shell.fields.password' | translate"
       [class.is-invalid]="password.invalid"
     />

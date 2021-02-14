@@ -6,7 +6,7 @@
       type="email"
       class="form-control"
       id="auth-login-email"
-      [formControlName]="fields.EMAIL"
+      [formControlName]="email.controlName"
       placeholder="name@example.com"
       [class.is-invalid]="email.invalid"
     />
@@ -20,7 +20,7 @@
       type="password"
       class="form-control"
       id="auth-login-password"
-      [formControlName]="fields.PASSWORD"
+      [formControlName]="password.controlName"
       placeholder="Password1!"
       [class.is-invalid]="password.invalid"
     />

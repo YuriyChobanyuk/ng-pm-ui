@@ -1,10 +1,10 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
-import { LoginCredentials, LoginFormFields } from '../../../../interfaces';
-import { FormsService } from '../../../services/forms.service';
-import { ValidationService } from '../../../services/validation.service';
+import { LoginCredentials } from '../../../../interfaces';
 import { EmailField } from '../fields/email-field';
 import { LoginPasswordField } from '../fields/login-password-field';
+import { LoginFormService } from './login-form.service';
 
 @Component({
   selector: 'app-login',
@@ -16,21 +16,17 @@ export class LoginComponent implements OnInit {
   @Output()
   submitLogin: EventEmitter<LoginCredentials> = new EventEmitter<LoginCredentials>();
 
-  form = this.formsService.getLoginForm();
-  fields = LoginFormFields;
-  email = new EmailField(this.form, this.validationService, this.fields.EMAIL);
-  password = new LoginPasswordField(
-    this.form,
-    this.validationService,
-    this.fields.PASSWORD,
-  );
+  form!: FormGroup;
+  email!: EmailField;
+  password!: LoginPasswordField;
 
-  constructor(
-    private formsService: FormsService,
-    private validationService: ValidationService,
-  ) {}
+  constructor(private formService: LoginFormService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.form = this.formService.getLoginForm();
+    this.email = this.formService.getEmailField(this.form);
+    this.password = this.formService.getPasswordField(this.form);
+  }
 
   handleToggleLogin(): void {
     this.toggleLogin.emit();

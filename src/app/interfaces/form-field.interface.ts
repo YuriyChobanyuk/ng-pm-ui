@@ -5,4 +5,5 @@ export interface FormField {
   control: AbstractControl | null;
   invalid: boolean;
   errors: Observable<string> | null;
+  controlName: string;
 }

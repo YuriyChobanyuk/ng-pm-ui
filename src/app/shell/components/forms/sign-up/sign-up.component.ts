@@ -1,11 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
-import { SignUpCredentials, SignUpFormFields } from '../../../../interfaces';
-import { FormsService } from '../../../services/forms.service';
-import { ValidationService } from '../../../services/validation.service';
-import { EmailField } from '../fields/email-field';
-import { SignUpPasswordField } from '../fields/sign-up-password-field';
-import { UsernameField } from '../fields/username-field';
+import { FormField, SignUpCredentials } from '../../../../interfaces';
+import { SignUpFormService } from './sign-up-form.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -17,22 +14,19 @@ export class SignUpComponent implements OnInit {
   @Output()
   submitSignUp: EventEmitter<SignUpCredentials> = new EventEmitter<SignUpCredentials>();
 
-  form = this.formsService.getSignUpForm();
-  fields = SignUpFormFields;
-  email = new EmailField(this.form, this.validationService, this.fields.EMAIL);
-  name = new UsernameField(this.form, this.validationService, this.fields.NAME);
-  password = new SignUpPasswordField(
-    this.form,
-    this.validationService,
-    this.fields.PASSWORD,
-  );
+  form!: FormGroup;
+  email!: FormField;
+  name!: FormField;
+  password!: FormField;
 
-  constructor(
-    private formsService: FormsService,
-    private validationService: ValidationService,
-  ) {}
+  constructor(private formService: SignUpFormService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.form = this.formService.createForm();
+    this.email = this.formService.createEmailField(this.form);
+    this.password = this.formService.createPasswordField(this.form);
+    this.name = this.formService.createUsernameField(this.form);
+  }
 
   handleToggleLogin(): void {
     this.toggleLogin.emit();
